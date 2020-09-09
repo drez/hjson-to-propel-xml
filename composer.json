@@ -21,7 +21,8 @@
     ],
     "require": {
         "php": ">=5.6",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "laktak/hjson": "^2.1"
     },
     "autoload": {
         "psr-4": {
