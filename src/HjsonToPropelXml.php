@@ -2,6 +2,9 @@
 
 namespace HjsonToPropelXml;
 
+/**
+ * Main class
+ */
 class HjsonToPropelXml
 {
 
@@ -12,9 +15,16 @@ class HjsonToPropelXml
         return $this->Xml;
     }
 
-    public function convert(array $obj)
+    /**
+     * Go through the nested array and convert to object than xml
+     *
+     * @param array $obj
+     * @return void
+     */
+    public function convert(array $obj): void
     {
         static $level = 0;
+        // foreach level
         foreach ($obj as $key => $el) {
             if ($level == 0) {  // root level
                 $this->Database = new Database(['name' => $key]);

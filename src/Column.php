@@ -2,17 +2,35 @@
 
 namespace HjsonToPropelXml;
 
+/**
+ * class representation of a Propel column
+ */
 class Column
 {
     private $name;
 
+    /**
+     * defaults attributes
+     *
+     * @var array
+     */
     private $defaults = [
         "name" => '',
         "description" => ''
     ];
 
+    /**
+     * collection of related foreign key objects
+     *
+     * @var array
+     */
     private $ForeignKeys = [];
 
+    /**
+     * default value for column shortcurt
+     *
+     * @var array
+     */
     private $defaultsTypes = [
         "primary" => ["type" => "INTEGER", "size" => 11, "required" => "true", "setNull" => "false", "primaryKey" => "true", "autoIncrement" => "true"],
         "foreign" => ["type" => "INTEGER", "size" => 11, "required" => "true", "setNull" => "true",],
@@ -22,8 +40,18 @@ class Column
         "decimal" => ["type" => "DATE", "size" => "", "scale" => "2", "required" => "false", "setNull" => "true"],
     ];
 
+    /**
+     * attributes to be converted to xml
+     *
+     * @var array
+     */
     private $attributes = [];
 
+    /**
+     * supported Propel attributes, for validation
+     *
+     * @var array
+     */
     private $parameters = [
         ["type" => "string"],
         ["size" => "int"],
@@ -40,6 +68,11 @@ class Column
         ["primaryKey" => "boolean"],
     ];
 
+    /**
+     * Propel column attributes shortcuts
+     *
+     * @var array
+     */
     private $keywords = [
         "not-required" => ["required", "false"],
         "required" => ["required", "true"],
@@ -52,6 +85,11 @@ class Column
         "index" => []
     ];
 
+    /**
+     * Propel foreign-key attributes shortcuts map
+     *
+     * @var array
+     */
     private $foreignKeywords = [
         "onDelete" => "key",
         "onUpdate" => "key",
@@ -59,7 +97,18 @@ class Column
         "foreign" => "reference"
     ];
 
+    /**
+     * is column unique
+     *
+     * @var boolean
+     */
     private $isUnique = false;
+
+    /**
+     * is column an index
+     *
+     * @var boolean
+     */
     private $isIndex = false;
 
     public function __construct($key, $value)
@@ -68,12 +117,25 @@ class Column
         $this->setAttributes($value);
     }
 
+    /**
+     * parse the function style column shortcut ie. String(32)
+     *
+     * @param string $key
+     * @return void
+     */
     private function parseValue(string $key)
     {
         preg_match("/([\w\_\d]+)\(([\w\W]*)\)/", $key, $matches);
         return $matches;
     }
 
+    /**
+     * set attributes for the column key, columnName(description)
+     * or simple table name with no parentheses()
+     *
+     * @param [type] $key
+     * @return void
+     */
     private function setKey($key): void
     {
         $matches = $this->parseValue($key);
@@ -89,6 +151,12 @@ class Column
         //echo $key . \PHP_EOL;
     }
 
+    /**
+     * set the attributes ... lol
+     *
+     * @param [type] $values
+     * @return void
+     */
     private function setAttributes($values): void
     {
         if (is_array($values)) {
@@ -101,6 +169,13 @@ class Column
         }
     }
 
+    /**
+     * set the attribute from keywords
+     * parse the colon separated keywords
+     *
+     * @param array $values
+     * @return void
+     */
     private function setOtherAttributes(array $values)
     {
         foreach ($values as $value) {
@@ -148,6 +223,12 @@ class Column
         return $this->isIndex;
     }
 
+    /**
+     * parse the function style column shortcut ie. String(32)
+     *
+     * @param [type] $values
+     * @return void
+     */
     private function setType($values): void
     {
         //echo $values . \PHP_EOL;
@@ -167,6 +248,13 @@ class Column
         //print_r($this->attributes);
     }
 
+    /**
+     * set the attribute to set depending on the type keyword
+     *
+     * @param [type] $type
+     * @param string $value
+     * @return void
+     */
     private function setAttributeFromType($type, $value = ""): void
     {
         $type = \strtolower($type);

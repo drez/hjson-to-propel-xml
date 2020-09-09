@@ -2,15 +2,28 @@
 
 namespace HjsonToPropelXml;
 
+/**
+ * class representation of a Propel table
+ */
 class Table
 {
     private $name;
 
+    /**
+     * defaults attributes
+     *
+     * @var array
+     */
     private $defaults = [
         "name" => '',
         "description" => ''
     ];
 
+    /**
+     * supported Propel table attributes, for validation
+     *
+     * @var array
+     */
     private $parameters = [
         ["phpName" => "string"],
         ["package" => "string"],
@@ -25,10 +38,32 @@ class Table
         ["allowPkInsert" => "boolean"],
     ];
 
+    /**
+     * attributes to be converted to xml
+     *
+     * @var array
+     */
     private $attributes = [];
 
+    /**
+     * collection of related behavior objects
+     *
+     * @var array
+     */
     private $Behaviors = [];
+
+    /**
+     * a Unique object to set column in
+     *
+     * @var [type]
+     */
     private $Unique;
+
+    /**
+     * a Index object to set column in
+     *
+     * @var [type]
+     */
     private $Index;
 
     public function __construct($key)
@@ -38,6 +73,12 @@ class Table
         $this->Index = new Index();
     }
 
+    /**
+     * parse the function style column shortcut ie. tablename(Description)
+     *
+     * @param string $key
+     * @return void
+     */
     private function setKey($key)
     {
         preg_match("/([\w\_\d]+)\(([\w\W]*)\)/", $key, $matches);
@@ -55,6 +96,12 @@ class Table
         $this->attributes[$key] = $value;
     }
 
+    /**
+     * get table attributes 
+     * and related object xml in the attribute '$inner'
+     *
+     * @return void
+     */
     public function getAttributes()
     {
         foreach ($this->Behaviors as $Behavior) {

@@ -2,30 +2,65 @@
 
 namespace HjsonToPropelXml;
 
+/**
+ * class representation of a Propel database
+ * 
+ */
 class Database
 {
 
+    /**
+     * database tag default
+     *
+     * @var array
+     */
     private $defaults = [
         "name" => '',
         "defaultIdMethod" => 'native',
         "namespace" => 'App'
     ];
 
+    /**
+     * behavior shortcuts, for behavior with no parameters
+     *
+     * @var array
+     */
     private $behaviors = [
         "add_validator", "table_stamp_behavior"
     ];
 
+    /**
+     * parameters of APIgoat behavior
+     *
+     * @var array
+     */
     private $parameters = [
         "set_debug_level", "is_builder", "add_hooks", "with_api",
         "checkbox_all_child", "set_parent_menu"
     ];
 
+    /**
+     * table inner shortcuts
+     *
+     * @var array
+     */
     private $tableKeywords = [
         "is_cross_ref",
         "validator"
     ];
 
+    /**
+     * attributes to be converted to xml
+     *
+     * @var array
+     */
     private $attributes = [];
+
+    /**
+     * collection of Behavior class of the table
+     *
+     * @var array
+     */
     private $Behaviors = [];
 
     /**
@@ -61,6 +96,14 @@ class Database
         return $attributes;
     }
 
+    /**
+     * add object or attributes to the database
+     *
+     * @param string $key
+     * @param [type] $value
+     * @param integer $level
+     * @return void
+     */
     public function add(string $key, $value, int $level = 0)
     {
         if (in_array($key, $this->behaviors)) {
@@ -120,8 +163,11 @@ class Database
         return $this->Behaviors[$key];
     }
 
-
-
+    /**
+     * convert object to xml
+     *
+     * @return string
+     */
     public function getXml(): string
     {
 
