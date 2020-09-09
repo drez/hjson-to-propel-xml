@@ -76,6 +76,14 @@ And it will translate to:
         <table />
     <database />
 
+# USE
+    $text = file_get_contents($this->rootDir . DIRECTORY_SEPARATOR . $hjson_file);
+    $std = mb_ereg_replace('/\r/', "", $text); // make sure we have unix style text regardless of the input
+    $hjson = $cr ? mb_ereg_replace("\n", "\r\n", $std) : $std;
+    $parser = new \HJSON\HJSONParser();
+    $obj = $parser->parse($hjson, ['assoc' => true]);
+    $HjsonToXml = new \HjsonToPropelXml\HjsonToPropelXml();
+    $HjsonToXml->convert($obj);
 
 # TODO
 * Make more keyword shortcut (String(32)), and find the best defaults
