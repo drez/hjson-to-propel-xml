@@ -6,30 +6,52 @@ I always found Propel(http://propelorm.org/) schema tedious to write. This shoul
 Now you can write that:
 ```
 {
-    goatcheese: // database name
+    // database name
+    goatcheese:
     {
-        add_validator:true, // custom behavior, not parameter
-        table_stamp_behavior:true, // timestamp behavior
-        /* parameters for the APIgoat behavior from here */
+        // custom behavior, not parameter
+        add_validator:true,
+        
+        // timestamp behavior
+        table_stamp_behavior:true,
+
+        /* parameters for the APIgoat behavior from here, configurable custom behaviors shortcuts */
         set_debug_level:3,
         is_builder:true,
         add_hooks:{},
         with_api:true,
         /* to here */
 
-        "authy('User')":{ // table name='authy' decription='User'
-            set_parent_menu:"Settings", // parameters from the APIgoat behavior
-            id_authy:["primary"], // Primary column name=id_authy primaryKey=true autoincrement=true
-            validation_key:"string(32)", // default string column type=VARCHAR size=50
-            "username(Username)":["string(32)", "not-required", "unique"], // Unique markup will be added for the table
-            is_root(Root):["enum(Yes, No)", "default:No"], // set the defaultValue=No
-            id_authy_group:["foreign(authy_group)", "required"], // Add a default colunm, type=integer and add the foreign-key markup
+        // table name='authy' decription='User'
+        "authy('User')":{ 
+            
+            // parameters from the APIgoat behavior
+            set_parent_menu:"Settings",
+            
+            // Primary column name=id_authy primaryKey=true autoincrement=true
+            id_authy:["primary"],
+            
+            // default string column type=VARCHAR size=50
+            validation_key:"string(32)",
+            
+            // Unique markup will be added for the table
+            "username(Username)":["string(32)", "not-required", "unique"],
+            
+            // set the defaultValue=No
+            is_root(Root):["enum(Yes, No)", "default:No"],
+
+            // Add a default colunm, type=integer and add the foreign-key markup
+            id_authy_group:["foreign(authy_group)", "required"],
             expire(Expiration): ["date()"]
         },
         authy_group_x:
         {
-            is_cross_ref:true,  // cross reference table, will add isCrossRef=true to the table
-            id_authy:["foreign(authy)", "primary", "onDelete:cascade"], // change the default settings on the foreign key
+            // cross reference table, will add isCrossRef=true to the table
+            is_cross_ref:true,
+
+            // change the default settings on the foreign key
+            id_authy:["foreign(authy)", "primary", "onDelete:cascade"],
+
             id_authy_group:["foreign(authy_group)", "primary"],
         }
     }
@@ -78,17 +100,22 @@ And it will translate to:
 
 # USE
     $text = file_get_contents($this->rootDir . DIRECTORY_SEPARATOR . $hjson_file);
-    $std = mb_ereg_replace('/\r/', "", $text); // make sure we have unix style text regardless of the input
+
+    // make sure we have unix style text regardless of the input
+    $std = mb_ereg_replace('/\r/', "", $text);
     $hjson = $cr ? mb_ereg_replace("\n", "\r\n", $std) : $std;
+    
+    // use of laktak/hjson(https://github.com/hjson/hjson-php) to convert the HJSON to array
     $parser = new \HJSON\HJSONParser();
     $obj = $parser->parse($hjson, ['assoc' => true]);
+
+    // convert Hjson to Propel schema
     $HjsonToXml = new \HjsonToPropelXml\HjsonToPropelXml();
     $HjsonToXml->convert($obj);
 
 # TODO
-* Make more keyword shortcut (String(32)), and find the best defaults
+* Make more keyword shortcut (String(32)), and find the best defaults!
 * Propel validations
-* Support for ALL propel parameters, right now only the most used are supported
 * Add table validations, warn on potential problems
 * Add custom behavior validations
 * Tests

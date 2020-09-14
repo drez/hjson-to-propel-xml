@@ -172,7 +172,7 @@ class Database
     {
 
         $Xml = new Xml();
-        $Xml->addElement('database', $this->getAttributes());
+        $Xml->addElement('database', $this->getAttributes(), false);
 
         foreach ($this->Behaviors as $Behavior) {
             $Xml->addElement('behavior', $Behavior->getAttributes());
@@ -183,9 +183,6 @@ class Database
 
         $Xml->addElementClose('database');
 
-
-        return $tables . "Table Count: " . count($this->Tables)
-            . \PHP_EOL
-            . $Xml->getXml();
+        return $Xml->getXml();
     }
 }

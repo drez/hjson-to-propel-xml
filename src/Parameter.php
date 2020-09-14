@@ -14,7 +14,12 @@ class Parameter
 
     private function setAttributes($key, $value)
     {
-        $this->attributes[$key] = json_encode($value);
+        if(is_array($value)){
+            $this->attributes[$key] = json_encode($value);
+        }else{
+            $this->attributes[$key] = $value;
+        }
+        
     }
 
     public function getAttributes(): array

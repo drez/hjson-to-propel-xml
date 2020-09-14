@@ -37,7 +37,7 @@ class Xml
 
     public function addElementClose(string $name): void
     {
-        $this->xml .= $this->pad($name) . "<$name />" . \PHP_EOL;
+        $this->xml .= $this->pad($name) . "</$name>" . \PHP_EOL;
     }
 
     public function getXml(): string

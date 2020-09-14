@@ -39,7 +39,7 @@ class ForeignKey
     {
         $Xml = new Xml();
         $Xml->addElement('foreign-key', $this->getAttributes('key'), false);
-        $Xml->addElement('reference', $this->getAttributes('reference'), false);
+        $Xml->addElement('reference', $this->getAttributes('reference'), true);
         $Xml->addElementClose('foreign-key');
         return $Xml->getXml();
     }

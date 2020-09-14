@@ -1,0 +1,32 @@
+{
+    goatcheese: // database name
+    {
+        add_validator:true, // custom behavior, not parameter
+        table_stamp_behavior:true, // timestamp behavior
+        # parameters from the APIgoat behavior
+        set_debug_level:3,
+        is_builder:true,
+        add_hooks:{},
+        with_api:true,
+        # !parameters from the APIgoat behavior
+
+        "authy('User')":{ // table name='authy' decription='User'
+            set_parent_menu:"Settings", // parameters from the APIgoat behavior
+
+            id_authy:["primary"], // Primary column name=id_authy primaryKey=true autoincrement=true
+            validation_key:"string(32)", // default string column type=VARCHAR size=50
+            "username(Username)":["string(32)", "not-required", "unique"], // Unique markup will be added for the table
+            is_root(Root):["enum(Yes, No)", "default:No"], // set the defaultValue=No
+            id_authy_group:["foreign(authy_group)", "required"], // Add a default colunm, type=integer and add the foreign-key markup
+            expire(Expiration): ["date()"]
+        },
+        authy_group_x:
+        {
+            is_cross_ref:true,  // cross reference table, will add isCrossRef=true to the table
+
+            id_authy:["foreign(authy)", "primary", "onDelete:cascade"], // change the default settings on the foreign key
+            id_authy_group:["foreign(authy_group)", "primary"],
+
+        }
+    }
+}
