@@ -32,12 +32,13 @@ class Column
      * @var array
      */
     private $defaultsTypes = [
-        "primary" => ["type" => "INTEGER", "size" => 11, "required" => "true", "setNull" => "false", "primaryKey" => "true", "autoIncrement" => "true"],
-        "foreign" => ["type" => "INTEGER", "size" => 11, "required" => "true", "setNull" => "true",],
-        "string" => ["type" => "VARCHAR", "size" => 50, "required" => "false", "setNull" => "true"],
-        "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false", "setNull" => "false"],
-        "date" => ["type" => "DATE", "required" => "false", "setNull" => "true"],
-        "decimal" => ["type" => "DATE", "size" => "", "scale" => "2", "required" => "false", "setNull" => "true"],
+        "primary" => ["type" => "INTEGER", "size" => 11, "required" => "true", "primaryKey" => "true", "autoIncrement" => "true"],
+        "foreign" => ["type" => "INTEGER", "size" => 11, "required" => "true",],
+        "string" => ["type" => "VARCHAR", "size" => 50, "required" => "false"],
+        "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false"],
+        "date" => ["type" => "DATE", "required" => "false"],
+        "decimal" => ["type" => "DATE", "size" => "6", "scale" => "2", "required" => "false"],
+        "text" => ["type" => "longvarchar", "scale" => "2", "required" => "false"],
     ];
 
     /**
