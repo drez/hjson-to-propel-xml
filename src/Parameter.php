@@ -18,7 +18,8 @@ class Parameter
             $this->attributes['name'] = $key;
             $this->attributes['value'] = \str_replace('"', "'", json_encode($value));
         } else {
-            $this->attributes[$key] = $value;
+            $this->attributes['name'] = $key;
+            $this->attributes['value'] = $value;
         }
     }
 
