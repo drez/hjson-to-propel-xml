@@ -1,8 +1,15 @@
 # A better way to build Propel with HJSON Schema
 
-This is a standalone library to convert HJSON file to Propel XML schema.
-I always found Propel(http://propelorm.org/) schema tedious to write. This should help make it more approchable. HJSON(https://hjson.github.io) seems the best option.
+This is a library to convert HJSON file to Propel XML schema.
+I always found Propel(http://propelorm.org/) schema tedious to write. This should help make it more approchable.
 
+# Install with composer
+    composer require drez/hjson-to-propel-xml
+
+# Live converter 
+https://hjson2xml.apigoat.com
+
+# Use 
 Now you can write that:
 ```
 {
