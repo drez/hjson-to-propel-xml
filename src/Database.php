@@ -36,7 +36,9 @@ class Database
      */
     private $parameters = [
         "set_debug_level", "is_builder", "add_hooks", "with_api",
-        "checkbox_all_child", "set_parent_menu"
+        "checkbox_all_child", "set_parent_menu", "set_menu_priority",
+        "set_list_hide_columns", "add_search_columns", "add_tab_columns",
+        "with_child_tables"
     ];
 
     /**

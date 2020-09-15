@@ -179,6 +179,7 @@ class Column
     private function setOtherAttributes(array $values)
     {
         foreach ($values as $value) {
+            // check for keywords
             if (isset($this->keywords[$value])) {
                 if ($value == 'unique') {
                     $this->setUnique();
@@ -187,6 +188,7 @@ class Column
                 } else {
                     $this->attributes[$this->keywords[$value][0]] = $this->keywords[$value][1];
                 }
+                // check for key value
             } elseif (strstr($value, ":")) {
                 $part = explode(':', $value);
                 if (isset($this->keywords[$part[0]])) {
@@ -195,11 +197,13 @@ class Column
                     if (is_object($this->ForeignKeys)) {
                         $this->ForeignKeys->setAttribute($this->foreignKeywords[$part[0]], $part[0], $part[1]);
                     }
+                } elseif (in_array($value[0], $this->parameters)) {
+                    $this->attributes[$value[0]] = $value[1];
                 } else {
-                    throw new \Exception("Unknown parameter " . $value);
+                    throw new \Exception("Unknown key:pair parameter: " . $value);
                 }
             } else {
-                throw new \Exception("Unknown parameter " . $value);
+                throw new \Exception("Unknown parameter: " . $value);
             }
         }
     }
@@ -226,7 +230,7 @@ class Column
     /**
      * parse the function style column shortcut ie. String(32)
      *
-     * @param [type] $values
+     * @param mix $values
      * @return void
      */
     private function setType($values): void
