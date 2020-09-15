@@ -15,7 +15,8 @@ class Parameter
     private function setAttributes($key, $value)
     {
         if (is_array($value)) {
-            $this->attributes[$key] = \str_replace('"', "'", json_encode($value));
+            $this->attributes['name'] = $key;
+            $this->attributes['value'] = \str_replace('"', "'", json_encode($value));
         } else {
             $this->attributes[$key] = $value;
         }
