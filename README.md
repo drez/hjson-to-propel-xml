@@ -67,43 +67,43 @@ Now you can write that:
     
 will translate to:
 
-    <database name="" defaultIdMethod="native" namespace="App" />
+    <database name="goatcheese" defaultIdMethod="native" namespace="App" >
             <behavior name="add_validator" />
             <behavior name="table_stamp_behavior" />
             <behavior name="GoatCheese" >
-                <parameter set_debug_level="3" />
-                <parameter is_builder="true" />
-                <parameter add_hooks="[]" />
-                <parameter with_api="true" />
-            <behavior />
+                <parameter name="set_debug_level" value="3" />
+                <parameter name="is_builder" value="1" />
+                <parameter name="add_hooks" value="[]" />
+                <parameter name="with_api" value="1" />
+            </behavior>
         <table name="authy" description="User" >
             <behavior name="GoatCheese" >
-                <parameter set_parent_menu=""Settings"" />
-            <behavior />
-            <column name="id_authy" type="INTEGER" size="11" required="true" setNull="false" primaryKey="true" autoIncrement="true" />
-            <column name="validation_key" type="VARCHAR" size="32" required="false" setNull="true" />
-            <column name="username" description="Username" type="VARCHAR" size="32" required="false" setNull="true" />
-            <column name="is_root" description="Root" type="ENUM" valueSet="Yes, No" required="false" setNull="false" defaultValue="No" />
-            <column name="id_authy_group" type="INTEGER" size="11" required="true" setNull="true" />
+                <parameter name="set_parent_menu" value="Settings" />
+            </behavior>
+            <column name="id_authy" type="INTEGER" size="11" required="true" primaryKey="true" autoIncrement="true" />
+            <column name="validation_key" type="VARCHAR" size="32" required="false" />
+            <column name="username" description="Username" type="VARCHAR" size="32" required="false" />
+            <column name="is_root" description="Root" type="ENUM" valueSet="Yes, No" required="false" defaultValue="No" />
+            <column name="id_authy_group" type="INTEGER" size="11" required="true" />
             <foreign-key foreignTable="authy_group" onDelete="restrict" onUpdate="restrict" >
-                <reference local="id_authy_group" foreign="id_authy_group" >
-            <foreign-key />
-            <column name="expire" description="Expiration" type="DATE" required="false" setNull="true" />
+                <reference local="id_authy_group" foreign="id_authy_group" />
+            </foreign-key>
+            <column name="expire" description="Expiration" type="DATE" required="false" />
             <unique >
                 <unique-column name="username" />
-            <unique />
-        <table />
+            </unique>
+        </table>
         <table name="authy_group_x" isCrossRef="true" >
-            <column name="id_authy" type="INTEGER" size="11" required="true" setNull="true" primaryKey="true" />
+            <column name="id_authy" type="INTEGER" size="11" required="true" primaryKey="true" />
             <foreign-key foreignTable="authy" onDelete="cascade" onUpdate="restrict" >
-                <reference local="id_authy" foreign="id_authy" >
-            <foreign-key />
-            <column name="id_authy_group" type="INTEGER" size="11" required="true" setNull="true" primaryKey="true" />
+                <reference local="id_authy" foreign="id_authy" />
+            </foreign-key>
+            <column name="id_authy_group" type="INTEGER" size="11" required="true" primaryKey="true" />
             <foreign-key foreignTable="authy_group" onDelete="restrict" onUpdate="restrict" >
-                <reference local="id_authy_group" foreign="id_authy_group" >
-            <foreign-key />
-        <table />
-    <database />
+                <reference local="id_authy_group" foreign="id_authy_group" />
+            </foreign-key>
+        </table>
+    </database>
 
 # USE
     $text = file_get_contents($this->rootDir . DIRECTORY_SEPARATOR . $hjson_file);
