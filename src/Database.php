@@ -89,8 +89,8 @@ class Database
     public function getAttributes()
     {
         foreach ($this->defaults as $key => $value) {
-            if ($this->attibutes[$key]) {
-                $attributes[$key] = $this->attibutes[$key];
+            if ($this->attributes[$key]) {
+                $attributes[$key] = $this->attributes[$key];
             } else {
                 $attributes[$key] = $value;
             }
