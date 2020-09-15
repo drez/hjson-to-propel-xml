@@ -9,7 +9,7 @@ I always found Propel(http://propelorm.org/) schema tedious to write. This shoul
 # Live converter 
 https://hjson2xml.apigoat.com
 
-# Use 
+# Example 
 Now you can write that:
 ```
 {
@@ -65,7 +65,7 @@ Now you can write that:
 }
 ```
     
-And it will translate to:
+will translate to:
 
     <database name="" defaultIdMethod="native" namespace="App" />
             <behavior name="add_validator" />
@@ -119,6 +119,12 @@ And it will translate to:
     // convert Hjson to Propel schema
     $HjsonToXml = new \HjsonToPropelXml\HjsonToPropelXml();
     $HjsonToXml->convert($obj);
+
+# Schema
+
+* You can use all Propel column type
+* You can specify any Propel column attributes as attribut:value
+* You are encouraged to add your own shortcuts for the most used type!
 
 # TODO
 * Make more keyword shortcut (String(32)), and find the best defaults!
