@@ -53,6 +53,13 @@ class Table
     private $Behaviors = [];
 
     /**
+     * collection of related behavior objects
+     *
+     * @var array
+     */
+    private $Validators = [];
+
+    /**
      * a Unique object to set column in
      *
      * @var [type]
@@ -156,13 +163,16 @@ class Table
         $this->attributes['isCrossRef'] = "true";
     }
 
-    public function validator(array $value)
+    public function validator(array $values)
     {
-        $this->addValidator($value);
+        foreach ($values as $key => $value) {
+            $this->addValidator($key, $value);
+        }
     }
 
-    private function addValidator(array $value)
+    private function addValidator(string $key, array $value)
     {
+        $this->Validators[] = new Validator($key, $value);
     }
 
     public function getXml()
