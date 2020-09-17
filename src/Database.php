@@ -119,7 +119,7 @@ class Database
                 }
                 $this->currentObj->getBehavior('GoatCheese')->addParameter($key, $value);
             } else {
-                throw new \Exception("No current obj");
+                $this->logger->error("No current obj");
             }
         } else {
 
@@ -134,7 +134,7 @@ class Database
                         $this->currentObj->$key($value);
                     }
                 } else {
-                    throw new \Exception("No current obj 2");
+                    $this->logger->error("No current obj 2");
                 }
             } elseif ($level < 2) {
                 // table

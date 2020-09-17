@@ -2,6 +2,8 @@
 
 namespace HjsonToPropelXml;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Main class
  */
@@ -9,6 +11,11 @@ class HjsonToPropelXml
 {
 
     private $Database;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     public function getXml()
     {
@@ -33,7 +40,7 @@ class HjsonToPropelXml
                     $this->convert($el);
                     $this->Xml = $this->Database->getXml();
                 } else {
-                    throw new \Exception("Empty database or parsing error - make sure all tables are in the database");
+                    $this->logger->error("Empty database or parsing error - make sure all tables are in the database");
                 }
             } else {
                 $this->Database->add($key, $el, $level);
