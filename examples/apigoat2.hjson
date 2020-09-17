@@ -1,0 +1,44 @@
+{
+    test_1:
+    {
+        add_validator:true,
+        table_stamp_behavior:true,
+        set_debug_level:3,
+        is_builder:true,
+        add_hooks:{},
+        with_api:true,
+
+        "authy('User')":{
+            // modifiers goat
+            set_parent_menu:"Settings",
+            set_menu_priority: 200,
+            set_list_hide_columns: ["rights", "passwd_hash"],
+            add_search_columns: {
+                    "Name":[["username", "%val", "or"], ["email", "%val"]],
+                    "Primary group":[["id_authy_group", "%val"]]
+                    },
+            add_tab_columns: {"Rights":["rights_all"]},
+            with_child_tables: ["authy_group_x", "authy_log"],
+
+            // columns
+            id_authy:["primary"],
+            validation_key:"string(32)",
+            "username(Username)":["string(32)", "not-required", "unique"],
+            "fullname(Username)":["string(100)", "not-required"],
+            "email(Email)":["string(100)", "required"],
+            "passwd_hash(Username)":["string(32)", "required"],
+            "expire(Expiration)":["date()", "default:0000-00-00"],
+            deactivate(Deactivated):["enum(Yes, No)", "default:No"],
+
+            validator:{
+                email:{
+                    required:"authy_email_required",
+                    unique:"authy_email_in_use",
+                },
+                passwd_hash:{
+                    required:"authy_password_required"
+                }
+            }
+        }
+    }
+}
