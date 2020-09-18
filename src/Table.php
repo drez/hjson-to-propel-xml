@@ -46,14 +46,22 @@ class Table
     private $attributes = [];
 
     /**
-     * collection of related behavior objects
+     * collection of related Columns objects
      *
      * @var array
      */
+    private $Columns = [];
+
+    /**
+     * collection of related Behavior objects
+     *
+     * @var array
+     */
+
     private $Behaviors = [];
 
     /**
-     * collection of related behavior objects
+     * collection of related Validator objects
      *
      * @var array
      */

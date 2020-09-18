@@ -26,7 +26,7 @@ class Database
      * @var array
      */
     private $behaviors = [
-        "add_validator", "table_stamp_behavior"
+        "add_validator", "add_tablestamp"
     ];
 
     /**
