@@ -26,7 +26,7 @@ class Database
      * @var array
      */
     private $behaviors = [
-        "add_validator", "table_stamp_behavior"
+        "add_validator", "add_tablestamp", "add_archivable"
     ];
 
     /**
@@ -35,10 +35,14 @@ class Database
      * @var array
      */
     private $parameters = [
-        "set_debug_level", "is_builder", "add_hooks", "with_api",
-        "checkbox_all_child", "set_parent_menu", "set_menu_priority",
-        "set_list_hide_columns", "add_search_columns", "add_tab_columns",
-        "with_child_tables"
+        "set_debug_level", "set_parent_menu", "set_order_list_columns", "set_list_hide_columns",
+        "set_menu_priority", "set_parent_table", "set_list_hide_columns", "set_form_title",
+        "set_list_hide_columns_except", "set_input_options", "set_order_child_list_columns",
+        "is_builder", "is_file_upload_table", "is_wysiwyg_colunms", "set_selectbox_filters", "is_root_columns",
+        "with_api", "with_child_tables",
+        "add_hooks", "add_search_columns", "add_tab_columns", "add_child_search_columns",
+        "checkbox_all_child", "auth_session_val", "readonly_columns", "total_columns_child", "calculated_prefix", "multiple_fenetre", "bulk_update"
+
     ];
 
     /**
@@ -73,8 +77,9 @@ class Database
      */
     private $currentObj;
 
-    public function __construct(array $attributes)
+    public function __construct(array $attributes, $logger)
     {
+        $this->logger = $logger;
         $this->setAttibutes($attributes);
         $this->currentObj = &$this;
     }
@@ -119,7 +124,7 @@ class Database
                 }
                 $this->currentObj->getBehavior('GoatCheese')->addParameter($key, $value);
             } else {
-                throw new \Exception("No current obj");
+                $this->logger->error("No current obj");
             }
         } else {
 
@@ -128,18 +133,18 @@ class Database
                 if (isset($this->currentObj)) {
                     if (!in_array($key, $this->tableKeywords)) {
                         if (isset($this->currentObj)) {
-                            $this->currentObj->addColumn(new Column($key, $value));
+                            $this->currentObj->addColumn(new Column($key, $value, $this->logger));
                         }
                     } else {
                         $this->currentObj->$key($value);
                     }
                 } else {
-                    throw new \Exception("No current obj 2");
+                    $this->logger->error("No current obj 2");
                 }
             } elseif ($level < 2) {
                 // table
                 if (!isset($this->Tables[$key])) {
-                    $this->Tables[$key] = new Table($key);
+                    $this->Tables[$key] = new Table($key, $this->logger);
 
                     $this->currentObj = &$this->Tables[$key];
                 }
@@ -149,7 +154,7 @@ class Database
 
     private function addBehavior($key)
     {
-        $this->Behaviors[$key] = new Behavior($key);
+        $this->Behaviors[$key] = new Behavior($key, $this->logger);
     }
 
     private function hasBehavior($key)

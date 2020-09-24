@@ -112,8 +112,9 @@ class Column
      */
     private $isIndex = false;
 
-    public function __construct($key, $value)
+    public function __construct($key, $value, $logger)
     {
+        $this->logger = $logger;
         $this->setKey($key);
         $this->setAttributes($value);
     }
@@ -201,10 +202,10 @@ class Column
                 } elseif (in_array($value[0], $this->parameters)) {
                     $this->attributes[$value[0]] = $value[1];
                 } else {
-                    throw new \Exception("Unknown key:pair parameter: " . $value);
+                    $this->logger->warning("Unknown key:pair parameter: " . $value);
                 }
             } else {
-                throw new \Exception("Unknown parameter: " . $value);
+                $this->logger->warning("Unknown parameter: " . $value);
             }
         }
     }
@@ -278,7 +279,7 @@ class Column
                 break;
             default:
                 if (empty($this->attributes['type'])) {
-                    throw new \Exception("Unknown type " . $type);
+                    $this->logger->warning("Unknown type " . $type);
                 }
         }
     }

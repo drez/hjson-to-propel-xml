@@ -46,14 +46,22 @@ class Table
     private $attributes = [];
 
     /**
-     * collection of related behavior objects
+     * collection of related Columns objects
      *
      * @var array
      */
+    private $Columns = [];
+
+    /**
+     * collection of related Behavior objects
+     *
+     * @var array
+     */
+
     private $Behaviors = [];
 
     /**
-     * collection of related behavior objects
+     * collection of related Validator objects
      *
      * @var array
      */
@@ -73,11 +81,12 @@ class Table
      */
     private $Index;
 
-    public function __construct($key)
+    public function __construct($key, $logger)
     {
+        $this->logger = $logger;
         $this->setKey($key);
-        $this->Unique = new Unique();
-        $this->Index = new Index();
+        $this->Unique = new Unique($this->logger);
+        $this->Index = new Index($this->logger);
     }
 
     /**

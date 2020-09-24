@@ -8,8 +8,9 @@ class Index
     private $attributes = [];
     private $columns = [];
 
-    public function __construct()
+    public function __construct($logger)
     {
+        $this->logger = $logger;
     }
 
     public function addColumn(string $columnName): void
