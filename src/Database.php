@@ -42,7 +42,6 @@ class Database
         "with_api", "with_child_tables",
         "add_hooks", "add_search_columns", "add_tab_columns", "add_child_search_columns",
         "checkbox_all_child", "auth_session_val", "readonly_columns", "total_columns_child", "calculated_prefix", "multiple_fenetre", "bulk_update"
-
     ];
 
     /**
