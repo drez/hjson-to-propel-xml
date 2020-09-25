@@ -83,7 +83,8 @@ class Column
         "primary" => ["primaryKey", "true"],
         "auto-increment" => ["autoIncrement", "true"],
         "unique" => [],
-        "index" => []
+        "index" => [],
+        "foreign" => []
     ];
 
     /**
@@ -180,13 +181,18 @@ class Column
      */
     private function setOtherAttributes(array $values)
     {
+        $keywords = \array_keys($this->keywords);
+        print_r($keywords);
         foreach ($values as $value) {
             // check for keywords
-            if (isset($this->keywords[$value])) {
-                if ($value == 'unique') {
+            $index = preg_grep("/^$value.*/", $keywords);
+            if ($index) {
+                if ($index == 'unique') {
                     $this->setUnique();
-                } elseif ($value == 'index') {
+                } elseif ($index == 'index') {
                     $this->setIndex();
+                } elseif ($index == 'foreign') {
+                    $this->setType($value);
                 } else {
                     $this->attributes[$this->keywords[$value][0]] = $this->keywords[$value][1];
                 }
@@ -198,6 +204,9 @@ class Column
                 } elseif (isset($this->foreignKeywords[$part[0]])) {
                     if (is_object($this->ForeignKeys)) {
                         $this->ForeignKeys->setAttribute($this->foreignKeywords[$part[0]], $part[0], $part[1]);
+                    } else {
+                        // postpone the foreign parameters after creation
+                        $setForeign[] = [$part[0], $part[1]];
                     }
                 } elseif (in_array($value[0], $this->parameters)) {
                     $this->attributes[$value[0]] = $value[1];
@@ -206,6 +215,16 @@ class Column
                 }
             } else {
                 $this->logger->warning("Unknown parameter: " . $value);
+            }
+        }
+
+        if (is_array($setForeign)) {
+            if (is_object($this->ForeignKeys)) {
+                foreach ($setForeign as $params) {
+                    $this->ForeignKeys->setAttribute($this->foreignKeywords[$params[0]], $params[0], $params[1]);
+                }
+            } else {
+                $this->logger->warning("Foreign key parameters without foreign key: " . $value);
             }
         }
     }
