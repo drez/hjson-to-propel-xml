@@ -50,9 +50,10 @@ class HjsonToPropelXml
                         return 1;
                     }
                 } else {
-                    $this->Database->add($key, $el, $level);
+                    $done = false;
+                    $done = $this->Database->add($key, $el, $level);
 
-                    if (is_array($el)) {
+                    if (is_array($el) && !$done) {
                         $level++;
                         $this->convert($el);
                         $level--;
