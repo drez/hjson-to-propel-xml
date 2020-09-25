@@ -2,7 +2,7 @@
     test_1:
     {
         add_validator:true,
-        table_stamp_behavior:true,
+        add_tablestamp:true,
         set_debug_level:3,
         is_builder:true,
         add_hooks:{},

@@ -2,7 +2,7 @@
     goatcheese: // database name
     {
         add_validator:true, // custom behavior, not parameter
-        table_stamp_behavior:true, // timestamp behavior
+        add_tablestamp:true, // timestamp behavior
         # parameters from the APIgoat behavior
         set_debug_level:3,
         is_builder:true,
