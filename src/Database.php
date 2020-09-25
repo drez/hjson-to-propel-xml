@@ -77,6 +77,8 @@ class Database
      */
     private $currentObj;
 
+    private $tableCount;
+
     public function __construct(array $attributes, $logger)
     {
         $this->logger = $logger;
@@ -147,7 +149,7 @@ class Database
                 // table
                 if (!isset($this->Tables[$key])) {
                     $this->Tables[$key] = new Table($key, $this->logger);
-
+                    $this->tableCount++;
                     $this->currentObj = &$this->Tables[$key];
                 }
             }
@@ -194,5 +196,10 @@ class Database
         $Xml->addElementClose('database');
 
         return $Xml->getXml();
+    }
+
+    public function getTableCount()
+    {
+        return $this->tableCount;
     }
 }
