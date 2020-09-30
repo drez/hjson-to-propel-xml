@@ -83,7 +83,20 @@ class Column
         "primary" => ["primaryKey", "true"],
         "auto-increment" => ["autoIncrement", "true"],
         "unique" => [],
-        "index" => []
+        "index" => [],
+        "foreign" => []
+    ];
+
+    /**
+     * Propel foreign-key attributes shortcuts map
+     *
+     * @var array
+     */
+    private $columnType = [
+        "varchar" => "size",
+        "integer" => "size",
+        "longvarchar" => "size",
+        "timestamp" => ""
     ];
 
     /**
@@ -115,8 +128,13 @@ class Column
     public function __construct($key, $value, $logger)
     {
         $this->logger = $logger;
-        $this->setKey($key);
-        $this->setAttributes($value);
+        $this->key = $key;
+        if (\is_string($key)) {
+            $this->setKey($key);
+            $this->setAttributes($value);
+        } else {
+            $this->logger->warning("Key is malformed in " . $this->key);
+        }
     }
 
     /**
@@ -135,20 +153,25 @@ class Column
      * set attributes for the column key, columnName(description)
      * or simple table name with no parentheses()
      *
-     * @param [type] $key
+     * @param string $key
      * @return void
      */
     private function setKey($key): void
     {
-        $matches = $this->parseValue($key);
-        if ($matches) {
-            $this->attributes['name'] = $matches[1];
-            $this->attributes['description'] = str_replace(['"', "'"], '', $matches[2]);
-            $this->name = $matches[1];
+        if (!\is_string($key)) {
+            $this->logger->warning("Key is malformed in " . $this->key);
         } else {
-            $this->attributes['name'] = $key;
-            $this->name = $key;
+            $matches = $this->parseValue($key);
+            if ($matches) {
+                $this->attributes['name'] = $matches[1];
+                $this->attributes['description'] = str_replace(['"', "'"], '', $matches[2]);
+                $this->name = $matches[1];
+            } else {
+                $this->attributes['name'] = $key;
+                $this->name = $key;
+            }
         }
+
 
         //echo $key . \PHP_EOL;
     }
@@ -156,18 +179,22 @@ class Column
     /**
      * set the attributes ... lol
      *
-     * @param [type] $values
+     * @param mix $values
      * @return void
      */
     private function setAttributes($values): void
     {
-        if (is_array($values)) {
-            $this->setType($values[0]);
-            //remove type from array and parse the other parameters
-            unset($values[0]);
-            $this->setOtherAttributes($values);
+        if (\is_null($values) || \is_null($values[0]) || is_array($values[0])) {
+            $this->logger->warning("A column is misconfigured in " . $this->key);
         } else {
-            $this->setType($values);
+            if (is_array($values)) {
+                $this->setType($values[0]);
+                //remove type from array and parse the other parameters
+                unset($values[0]);
+                $this->setOtherAttributes($values);
+            } else {
+                $this->setType($values);
+            }
         }
     }
 
@@ -180,32 +207,52 @@ class Column
      */
     private function setOtherAttributes(array $values)
     {
+        $keywords = \array_keys($this->keywords);
+        //print_r($keywords);
         foreach ($values as $value) {
-            // check for keywords
-            if (isset($this->keywords[$value])) {
-                if ($value == 'unique') {
-                    $this->setUnique();
-                } elseif ($value == 'index') {
-                    $this->setIndex();
-                } else {
-                    $this->attributes[$this->keywords[$value][0]] = $this->keywords[$value][1];
-                }
-                // check for key value
-            } elseif (strstr($value, ":")) {
-                $part = explode(':', $value);
-                if (isset($this->keywords[$part[0]])) {
-                    $this->attributes[$this->keywords[$part[0]][0]] = $part[1];
-                } elseif (isset($this->foreignKeywords[$part[0]])) {
-                    if (is_object($this->ForeignKeys)) {
-                        $this->ForeignKeys->setAttribute($this->foreignKeywords[$part[0]], $part[0], $part[1]);
+            if (!\is_null($value)) {
+                // check for keywords
+                $index = (str_replace($keywords, '', $value) != $value);
+                if ($index) {
+                    if ($value == 'unique') {
+                        $this->setUnique();
+                    } elseif ($value == 'index') {
+                        $this->setIndex();
+                    } elseif (stristr($value, 'foreign')) {
+                        $this->setType($value);
+                    } else {
+                        $this->attributes[$this->keywords[$value][0]] = $this->keywords[$value][1];
                     }
-                } elseif (in_array($value[0], $this->parameters)) {
-                    $this->attributes[$value[0]] = $value[1];
+                    // check for key value
+                } elseif (strstr($value, ":")) {
+                    $part = explode(':', $value);
+                    if (isset($this->keywords[$part[0]])) {
+                        $this->attributes[$this->keywords[$part[0]][0]] = $part[1];
+                    } elseif (isset($this->foreignKeywords[$part[0]])) {
+                        if (is_object($this->ForeignKeys)) {
+                            $this->ForeignKeys->setAttribute($this->foreignKeywords[$part[0]], $part[0], $part[1]);
+                        } else {
+                            // postpone the foreign parameters after creation
+                            $setForeign[] = [$part[0], $part[1]];
+                        }
+                    } elseif (in_array($value[0], $this->parameters)) {
+                        $this->attributes[$value[0]] = $value[1];
+                    } else {
+                        $this->logger->warning("Unknown key:pair parameter: " . $value . " in " . $this->key);
+                    }
                 } else {
-                    $this->logger->warning("Unknown key:pair parameter: " . $value);
+                    $this->logger->warning("Unknown parameter: " . $value . " in " . $this->key);
+                }
+            }
+        }
+
+        if (is_array($setForeign)) {
+            if (is_object($this->ForeignKeys)) {
+                foreach ($setForeign as $params) {
+                    $this->ForeignKeys->setAttribute($this->foreignKeywords[$params[0]], $params[0], $params[1]);
                 }
             } else {
-                $this->logger->warning("Unknown parameter: " . $value);
+                $this->logger->warning("Foreign key parameters without foreign key: " . $value . " in " . $this->key);
             }
         }
     }
@@ -278,7 +325,9 @@ class Column
                 $this->attributes['valueSet'] = $value;
                 break;
             default:
-                if (empty($this->attributes['type'])) {
+                if (empty($this->columnType[$this->attributes['type']])) {
+                    $this->attributes[$this->columnType[$this->attributes['type']]] = $value;
+                } else {
                     $this->logger->warning("Unknown type " . $type);
                 }
         }
