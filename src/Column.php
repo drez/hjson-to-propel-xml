@@ -255,6 +255,16 @@ class Column
                 $this->logger->warning("Foreign key parameters without foreign key: " . $value . " in " . $this->key);
             }
         }
+
+        if (is_array($setForeign)) {
+            if (is_object($this->ForeignKeys)) {
+                foreach ($setForeign as $params) {
+                    $this->ForeignKeys->setAttribute($this->foreignKeywords[$params[0]], $params[0], $params[1]);
+                }
+            } else {
+                $this->logger->warning("Foreign key parameters without foreign key: " . $value);
+            }
+        }
     }
 
     private function setUnique(): void

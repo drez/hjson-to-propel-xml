@@ -37,11 +37,13 @@ class HjsonToPropelXml
         try {
             foreach ($obj as $key => $el) {
                 if ($level == 0) {  // root level
+                    $this->logger->info("convert start - found database '$key'");
                     $this->Database = new Database(['name' => $key], $this->logger);
                     $level++;
                     if (is_array($el) && count($obj) == 1) {
                         if (!$this->convert($el)) {
                             $this->Xml = $this->Database->getXml();
+                            $this->logger->info("convert ended - found " . $this->Database->getTableCount() . " tables");
                         }
 
                         return 0;
@@ -50,9 +52,10 @@ class HjsonToPropelXml
                         return 1;
                     }
                 } else {
-                    $this->Database->add($key, $el, $level);
+                    $done = false;
+                    $done = $this->Database->add($key, $el, $level);
 
-                    if (is_array($el)) {
+                    if (is_array($el) && !$done) {
                         $level++;
                         $this->convert($el);
                         $level--;
