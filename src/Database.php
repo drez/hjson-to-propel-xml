@@ -36,12 +36,14 @@ class Database
      */
     private $parameters = [
         "set_debug_level", "set_parent_menu", "set_order_list_columns", "set_list_hide_columns",
-        "set_menu_priority", "set_parent_table", "set_list_hide_columns", "set_form_title",
+        "set_menu_priority", "set_parent_table", "set_form_title", "set_child_colunms",
         "set_list_hide_columns_except", "set_input_options", "set_order_child_list_columns",
+        "set_top_nav",
         "is_builder", "is_file_upload_table", "is_wysiwyg_colunms", "set_selectbox_filters", "is_root_columns",
         "with_api", "with_child_tables",
-        "add_hooks", "add_search_columns", "add_tab_columns", "add_child_search_columns",
-        "checkbox_all_child", "auth_session_val", "readonly_columns", "total_columns_child", "calculated_prefix", "multiple_fenetre", "bulk_update"
+        "add_hooks", "add_search_columns", "add_tab_columns", "add_child_search_columns", "add_menu",
+        "checkbox_all_child", "auth_session_val", "readonly_columns", "total_columns_child", "calculated_prefix", "multiple_fenetre", "bulk_update",
+        "child_select", "filter_select", "unit_caption", "total_columns", "common_filter", "order_select"
     ];
 
     /**
@@ -75,6 +77,8 @@ class Database
      * @var Object
      */
     private $currentObj;
+
+    private $tableCount;
 
     public function __construct(array $attributes, $logger)
     {
@@ -115,6 +119,7 @@ class Database
         if (in_array($key, $this->behaviors)) {
             // simple behavior
             $this->currentObj->addBehavior($key);
+            return true;
         } elseif (in_array($key, $this->parameters)) {
             // behavior with parameters
             if (isset($this->currentObj)) {
@@ -125,6 +130,7 @@ class Database
             } else {
                 $this->logger->error("No current obj");
             }
+            return true;
         } else {
 
             if ($level == 2) {
@@ -144,10 +150,11 @@ class Database
                 // table
                 if (!isset($this->Tables[$key])) {
                     $this->Tables[$key] = new Table($key, $this->logger);
-
+                    $this->tableCount++;
                     $this->currentObj = &$this->Tables[$key];
                 }
             }
+            return false;
         }
     }
 
@@ -190,5 +197,10 @@ class Database
         $Xml->addElementClose('database');
 
         return $Xml->getXml();
+    }
+
+    public function getTableCount()
+    {
+        return $this->tableCount;
     }
 }
