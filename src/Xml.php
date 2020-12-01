@@ -7,7 +7,7 @@ class Xml
 
     private $xml = "";
 
-    public function addElement(string $name, array $attributes, $close = true): Object
+    public function addElement(string $name, array $attributes, $close = true, $simple_quotes = false): Object
     {
         $attribs = '';
         $innerXml = '';
@@ -15,6 +15,8 @@ class Xml
             if (!empty($key)) {
                 if ($key == '$inner') {
                     $innerXml = $value;
+                } elseif ($simple_quotes && $key != 'name') {
+                    $attribs .= "$key='" . $value . "' ";
                 } else {
                     $attribs .= "$key=\"$value\" ";
                 }
