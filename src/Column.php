@@ -84,7 +84,7 @@ class Column
         "auto-increment" => ["autoIncrement", "true"],
         "unique" => [],
         "index" => [],
-        "foreign" => []
+        "foreign(" => []
     ];
 
     /**
