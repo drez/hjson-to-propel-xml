@@ -96,7 +96,8 @@ class Column
         "varchar" => "size",
         "integer" => "size",
         "longvarchar" => "size",
-        "timestamp" => ""
+        "timestamp" => "",
+        "text" => "size"
     ];
 
     /**
@@ -329,6 +330,8 @@ class Column
         // Set the right attribute from the argument in type('argument')
         switch ($type) {
             case 'string':
+            case 'text':
+            case 'integer':
                 $this->attributes['size'] = $value;
                 break;
             case 'enum':

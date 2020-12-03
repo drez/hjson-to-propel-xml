@@ -21,13 +21,27 @@ class Database
     ];
 
     /**
-     * behavior shortcuts, for behavior with no parameters
+     * behavior definitions
      *
      * @var array
      */
-    private $behaviors = [
-        "add_validator", "add_tablestamp", "add_archivable"
+    private $behaviors_config = [
+        "add_validator" => "bool",
+        "add_tablestamp" => "bool",
+        "add_archivable" => "bool",
+        "add_i18n" => [
+            "name" => "i18n",
+            "type" => "array",
+            "parameter" => "i18n_columns"
+        ]
     ];
+
+    /**
+     * behavior shortcuts index
+     *
+     * @var array
+     */
+    private $behaviors;
 
     /**
      * parameters of APIgoat behavior
@@ -82,6 +96,7 @@ class Database
 
     public function __construct(array $attributes, $logger)
     {
+        $this->behaviors = array_keys($this->behaviors_config);
         $this->logger = $logger;
         $this->setAttibutes($attributes);
         $this->currentObj = &$this;
@@ -117,11 +132,23 @@ class Database
     public function add(string $key, $value, int $level = 0)
     {
         if (in_array($key, $this->behaviors)) {
-            // simple behavior
-            $this->currentObj->addBehavior($key);
+            // defined behaviors
+            $behavior_name = (isset($this->behaviors_config[$key]['name'])) ? $this->behaviors_config[$key]['name'] : $key;
+            $this->currentObj->addBehavior($behavior_name, $value);
+            if (isset($this->behaviors_config[$key]) && isset($this->behaviors_config[$key]['parameter'])) {
+                if (isset($this->behaviors_config[$key]['type'])) {
+                    if ($this->behaviors_config[$key]['type'] == 'array') {
+                        foreach ($value as $val) {
+                            $this->currentObj->getBehavior($behavior_name)->addParameter($this->behaviors_config[$key]['parameter'], $val);
+                        }
+                    }
+                } else {
+                    $this->currentObj->getBehavior($behavior_name)->addParameter($this->behaviors_config[$key]['parameter'], $value);
+                }
+            }
             return true;
         } elseif (in_array($key, $this->parameters)) {
-            // behavior with parameters
+            // GoatCheese behavior
             if (isset($this->currentObj)) {
                 if (!$this->currentObj->hasBehavior('GoatCheese')) {
                     $this->currentObj->addBehavior('GoatCheese');
@@ -158,9 +185,9 @@ class Database
         }
     }
 
-    private function addBehavior($key)
+    private function addBehavior($key, $value = null)
     {
-        $this->Behaviors[$key] = new Behavior($key, $this->logger);
+        $this->Behaviors[$key] = new Behavior($key, $value, $this->logger);
     }
 
     private function hasBehavior($key)
