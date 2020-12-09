@@ -16,10 +16,12 @@ class Parameter
     {
         if (is_array($value)) {
             $this->attributes['name'] = $key;
-            $this->attributes['value'] = \str_replace('"', "'", json_encode($value));
+            $this->attributes['value'] = json_encode($value);
+            $this->isArray = true;
         } else {
             $this->attributes['name'] = $key;
             $this->attributes['value'] = $value;
+            $this->isArray = false;
         }
     }
 
@@ -31,6 +33,6 @@ class Parameter
     public function getXml()
     {
         $Xml = new Xml();
-        return $Xml->addElement('parameter', $this->getAttributes())->getXml();
+        return $Xml->addElement('parameter', $this->getAttributes(), true, $this->isArray)->getXml();
     }
 }

@@ -133,9 +133,9 @@ class Table
         return $this->attributes;
     }
 
-    public function addBehavior($key)
+    public function addBehavior($key, $value = null)
     {
-        $this->Behaviors[$key] = new Behavior($key);
+        $this->Behaviors[$key] = new Behavior($key, $value);
     }
 
     public function hasBehavior($key)

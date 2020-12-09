@@ -9,7 +9,7 @@ class Behavior
     private $Parameters = [];
     private $attributes = [];
 
-    public function __construct(string $key)
+    public function __construct(string $key, $value)
     {
         $this->setName($key);
     }
@@ -27,7 +27,6 @@ class Behavior
 
     public function getAttributes()
     {
-
         foreach ($this->Parameters as $Parameters) {
             $this->attributes['$inner'] .= $Parameters->getXml();
         }
