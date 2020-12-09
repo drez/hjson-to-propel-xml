@@ -38,7 +38,7 @@ class Column
         "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false"],
         "date" => ["type" => "DATE", "required" => "false"],
         "decimal" => ["type" => "DATE", "size" => "6", "scale" => "2", "required" => "false"],
-        "text" => ["type" => "longvarchar", "scale" => "2", "required" => "false"],
+        "text" => ["type" => "longvarchar", "required" => "false"],
     ];
 
     /**
@@ -185,7 +185,7 @@ class Column
     private function setAttributes($values): void
     {
         if (\is_null($values) || \is_null($values[0]) || is_array($values[0])) {
-            $this->logger->warning("A column is misconfigured in " . $this->key);
+            $this->logger->warning("A column (" . print_r($values, true) . ") is misconfigured in " . $this->key);
         } else {
             if (is_array($values)) {
                 $this->setType($values[0]);
@@ -336,6 +336,9 @@ class Column
                 break;
             default:
                 if (empty($this->columnType[$this->attributes['type']])) {
+                    if ($this->columnType[$this->attributes['type']] == 'size' && empty($value)) {
+                        $value = 10;
+                    }
                     $this->attributes[$this->columnType[$this->attributes['type']]] = $value;
                 } else {
                     $this->logger->warning("Unknown type " . $type);
