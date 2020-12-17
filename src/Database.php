@@ -166,9 +166,13 @@ class Database
                     if (!in_array($key, $this->tableKeywords)) {
                         if (isset($this->currentObj)) {
                             $this->currentObj->addColumn(new Column($key, $value, $this->logger));
+                        } else {
+                            $this->logger->error("No current obj 3");
                         }
                     } else {
-                        $this->currentObj->$key($value);
+                        if (method_exists($this->currentObj, $key)) {
+                            $this->currentObj->$key($value);
+                        }
                     }
                 } else {
                     $this->logger->error("No current obj 2");
