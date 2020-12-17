@@ -116,7 +116,7 @@ class Table
      * get table attributes 
      * and related object xml in the attribute '$inner'
      *
-     * @return void
+     * @return array
      */
     public function getAttributes()
     {
@@ -129,6 +129,10 @@ class Table
         }
 
         $this->attributes['$inner'] .= $this->Unique->getXml();
+
+        foreach ($this->Validators as $Validator) {
+            $this->attributes['$inner'] .= $Validator->getXml();
+        }
 
         return $this->attributes;
     }
@@ -167,7 +171,7 @@ class Table
         }
     }
 
-    public function is_cross_ref(string $value)
+    public function is_cross_ref(bool $values)
     {
         $this->attributes['isCrossRef'] = "true";
     }

@@ -3,6 +3,7 @@
 namespace HjsonToPropelXml;
 
 use Psr\Log\LoggerInterface;
+use HJSON\HJSONParser;
 
 /**
  * Main class
@@ -22,6 +23,14 @@ class HjsonToPropelXml
     public function getXml()
     {
         return $this->Xml;
+    }
+
+    public function process($hjson)
+    {
+        $hjson = mb_ereg_replace('/\r/', "", $hjson); // make sure we have unix style text regardless of the input
+        $parser = new HJSONParser();
+        $obj = $parser->parse($hjson, ['assoc' => true]);
+        $this->convert($obj);
     }
 
     /**

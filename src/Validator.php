@@ -32,11 +32,13 @@ class Validator
         $i = 0;
         foreach ($values as $key => $value) {
             if (!empty($value)) {
-                if (is_array($value)) {
+                if (isset($value['msg'])) {
                     $this->attributes['rule'][$i]['name'] = $key;
-                    $this->attributes['rule'][$i]['message'] = $value[0];
-                    $this->attributes['rule'][$i]['value'] = $value[1];
-                } else {
+                    $this->attributes['rule'][$i]['message'] = $value['msg'];
+                    if (isset($value['value'])) {
+                        $this->attributes['rule'][$i]['value'] = $value['value'];
+                    }
+                } elseif (!is_array($value)) {
                     $this->attributes['rule'][$i]['name'] = $key;
                     $this->attributes['rule'][$i]['message'] = $value;
                 }
@@ -57,7 +59,7 @@ class Validator
         $Xml->addElement('validator', $this->getAttributes('column'), false);
         $rules = $this->getAttributes('rule');
         foreach ($rules as $rule) {
-            $Xml->addElement('reference', $rule, true);
+            $Xml->addElement('rule', $rule, true);
         }
         $Xml->addElementClose('validator');
         return $Xml->getXml();

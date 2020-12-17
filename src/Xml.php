@@ -50,40 +50,22 @@ class Xml
     private function pad($name): string
     {
         $pad = "";
-        switch ($name) {
-            case "behavior":
-                $count = 2;
-                break;
-            case "parameter":
-                $count = 3;
-                break;
-            case "table":
-                $count = 1;
-                break;
-            case "column":
-                $count = 2;
-                break;
-            case "foreign-key":
-                $count = 2;
-                break;
-            case "reference":
-                $count = 3;
-                break;
-            case "unique":
-                $count = 2;
-                break;
-            case "unique-column":
-                $count = 3;
-                break;
-            case "index":
-                $count = 2;
-                break;
-            case "index-column":
-                $count = 3;
-                break;
-            default:
-                return "";
-        }
+        $keywords_padding = [
+            "table" => 1,
+            "parameter" => 3,
+            "behavior" => 2,
+            "column" => 2,
+            "foreign-key" => 2,
+            "validator" => 2,
+            "unique" => 2,
+            "index" => 2,
+            "rule" => 3,
+            "unique-column" => 3,
+            "rule" => 3,
+            "rule" => 3,
+        ];
+
+        $count = ($keywords_padding[$name]) ? $keywords_padding[$name] : 0;
 
         for ($i = 0; $i < $count; $i++) {
             $pad .= "\t";
