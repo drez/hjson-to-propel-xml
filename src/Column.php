@@ -93,11 +93,18 @@ class Column
      * @var array
      */
     private $columnType = [
+        "timestamp" => "",
         "varchar" => "size",
+        "string" => "size",
+        "char" => "size",
         "integer" => "size",
         "longvarchar" => "size",
-        "timestamp" => "",
-        "text" => "size"
+        "text" => "size",
+        "primary" => "size",
+        "bool" => "size",
+        "boolean" => "size",
+        "enum" => "valueSet",
+
     ];
 
     /**
@@ -328,24 +335,18 @@ class Column
         }
 
         // Set the right attribute from the argument in type('argument')
-        switch ($type) {
-            case 'string':
-            case 'text':
-            case 'integer':
-                $this->attributes['size'] = $value;
-                break;
-            case 'enum':
-                $this->attributes['valueSet'] = $value;
-                break;
-            default:
-                if (empty($this->columnType[$this->attributes['type']])) {
-                    if ($this->columnType[$this->attributes['type']] == 'size' && empty($value)) {
-                        $value = 10;
-                    }
-                    $this->attributes[$this->columnType[$this->attributes['type']]] = $value;
-                } else {
-                    $this->logger->warning("Unknown type " . $type);
-                }
+        if (!empty($this->columnType[$type])) {
+            if ($this->columnType[$type] == 'size' && empty($value)) {
+                $value = 10;
+            }
+
+            if (empty($this->attributes['type'])) {
+                $this->attributes['type'] = $type;
+            }
+
+            $this->attributes[$this->columnType[$type]] = $value;
+        } else {
+            $this->logger->warning("Unknown type " . $type);
         }
     }
 

@@ -2,8 +2,10 @@
 
 namespace HjsonToPropelXml;
 
-use Psr\Log\LoggerInterface;
 use HJSON\HJSONParser;
+use \HJSON\HJSONException;
+use Throwable;
+
 
 /**
  * Main class
@@ -25,12 +27,13 @@ class HjsonToPropelXml
         return $this->Xml;
     }
 
-    public function process($hjson)
+    public function process(string $hjson)
     {
         $hjson = mb_ereg_replace('/\r/', "", $hjson); // make sure we have unix style text regardless of the input
         $parser = new HJSONParser();
+
         $obj = $parser->parse($hjson, ['assoc' => true]);
-        $this->convert($obj);
+        return $this->convert($obj);
     }
 
     /**
@@ -55,10 +58,10 @@ class HjsonToPropelXml
                             $this->logger->info("convert ended - found " . $this->Database->getTableCount() . " tables");
                         }
 
-                        return 0;
+                        return false;
                     } else {
                         $this->logger->error("HJSON parser - Empty database or parsing error - make sure all tables are in the database bracket");
-                        return 1;
+                        return true;
                     }
                 } else {
                     $done = false;
