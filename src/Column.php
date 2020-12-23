@@ -37,8 +37,9 @@ class Column
         "string" => ["type" => "VARCHAR", "size" => 50, "required" => "false"],
         "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false"],
         "date" => ["type" => "DATE", "required" => "false"],
-        "decimal" => ["type" => "DATE", "size" => "6", "scale" => "2", "required" => "false"],
-        "text" => ["type" => "longvarchar", "required" => "false"],
+        "decimal" => ["type" => "DECIMAL", "size" => 6, "scale" => 2, "required" => "false"],
+        "text" => ["type" => "LONGVARCHAR", "required" => "false"],
+        "int" => ["type" => "INTEGER", "required" => "false", "size" => 11],
     ];
 
     /**
@@ -93,7 +94,7 @@ class Column
      * @var array
      */
     private $columnType = [
-        "timestamp" => "",
+        "timestamp" => "none",
         "varchar" => "size",
         "string" => "size",
         "char" => "size",
@@ -104,7 +105,7 @@ class Column
         "bool" => "size",
         "boolean" => "size",
         "enum" => "valueSet",
-
+        "decimal" => ["size", "scale"],
     ];
 
     /**
@@ -336,16 +337,29 @@ class Column
 
         // Set the right attribute from the argument in type('argument')
         if (!empty($this->columnType[$type])) {
-            if ($this->columnType[$type] == 'size' && empty($value)) {
-                $value = 10;
+            if ($this->columnType[$type] != 'none') {
+                if ($this->columnType[$type] == 'size' && empty($value)) {
+                    $value = 10;
+                }
+
+                if (empty($this->attributes['type'])) {
+                    $this->attributes['type'] = strtoupper($type);
+                }
             }
 
-            if (empty($this->attributes['type'])) {
-                $this->attributes['type'] = $type;
+            // Set the attribute(s)
+            if (is_array($this->columnType[$type])) {
+                $values = explode(',', $value);
+                if (is_array($values) && count($values) == 2) {
+                    $this->attributes[$this->columnType[$type][0]] = $values[0];
+                    $this->attributes[$this->columnType[$type][1]] = $values[1];
+                } else {
+                    $this->logger->warning("Problem with " . $this->attributes['name'] . " type " . $this->attributes['type'] . " requires 2 parameters");
+                }
+            } else {
+                $this->attributes[$this->columnType[$type]] = $value;
             }
-
-            $this->attributes[$this->columnType[$type]] = $value;
-        } else {
+        } elseif (!is_array($this->defaultsTypes[$type])) {
             $this->logger->warning("Unknown type " . $type);
         }
     }
