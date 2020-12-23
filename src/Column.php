@@ -337,14 +337,13 @@ class Column
 
         // Set the right attribute from the argument in type('argument')
         if (!empty($this->columnType[$type])) {
-            if ($this->columnType[$type] != 'none') {
-                if ($this->columnType[$type] == 'size' && empty($value)) {
-                    $value = 10;
-                }
 
-                if (empty($this->attributes['type'])) {
-                    $this->attributes['type'] = strtoupper($type);
-                }
+            if ($this->columnType[$type] == 'size' && empty($value)) {
+                $value = 10;
+            }
+
+            if (empty($this->attributes['type'])) {
+                $this->attributes['type'] = strtoupper($type);
             }
 
             // Set the attribute(s)
@@ -356,7 +355,7 @@ class Column
                 } else {
                     $this->logger->warning("Problem with " . $this->attributes['name'] . " type " . $this->attributes['type'] . " requires 2 parameters");
                 }
-            } else {
+            } elseif ($this->columnType[$type] != 'none') {
                 $this->attributes[$this->columnType[$type]] = $value;
             }
         } elseif (!is_array($this->defaultsTypes[$type])) {
