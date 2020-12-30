@@ -61,8 +61,7 @@ class Xml
             "index" => 2,
             "rule" => 3,
             "unique-column" => 3,
-            "rule" => 3,
-            "rule" => 3,
+            "reference" => 3,
         ];
 
         $count = ($keywords_padding[$name]) ? $keywords_padding[$name] : 0;
