@@ -54,7 +54,7 @@ class Database
         "set_list_hide_columns_except", "set_input_options", "set_order_child_list_columns",
         "set_top_nav",
         "is_builder", "is_file_upload_table", "is_wysiwyg_colunms", "set_selectbox_filters", "is_root_columns",
-        "with_api", "with_child_tables",
+        "with_api", "with_child_tables", "with_country",
         "add_hooks", "add_search_columns", "add_tab_columns", "add_child_search_columns", "add_menu",
         "checkbox_all_child", "auth_session_val", "readonly_columns", "total_columns_child", "calculated_prefix", "multiple_fenetre", "bulk_update",
         "child_select", "filter_select", "unit_caption", "total_columns", "common_filter", "order_select"
