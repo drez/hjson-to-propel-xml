@@ -70,14 +70,14 @@ class Table
     /**
      * a Unique object to set column in
      *
-     * @var [type]
+     * @var Unique
      */
     private $Unique;
 
     /**
      * a Index object to set column in
      *
-     * @var [type]
+     * @var int
      */
     private $Index;
 
@@ -122,6 +122,11 @@ class Table
     {
         foreach ($this->Behaviors as $Behavior) {
             $this->attributes['$inner'] .= $Behavior->getXml();
+        }
+
+        if(!$this->hasBehavior('GoatCheese')){
+            $this->addBehavior('GoatCheese');
+            $this->attributes['$inner'] .= $this->Behaviors['GoatCheese']->getXml();
         }
 
         foreach ($this->Columns as $Column) {
