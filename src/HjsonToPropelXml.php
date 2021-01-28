@@ -34,7 +34,7 @@ class HjsonToPropelXml
 
         $obj = $parser->parse($hjson, ['assoc' => true]);
         if($obj['%PROJECT_NAME%']){
-            throw new \Exception("Generic project name, please set the project name in the hjson file.");
+            return 1;
         }
         return $this->convert($obj);
     }
