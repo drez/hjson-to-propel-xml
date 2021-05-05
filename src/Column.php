@@ -40,6 +40,7 @@ class Column
         "decimal" => ["type" => "DECIMAL", "size" => 6, "scale" => 2, "required" => "false"],
         "text" => ["type" => "LONGVARCHAR", "required" => "false"],
         "int" => ["type" => "INTEGER", "required" => "false", "size" => 11],
+        "longvarchar" => ["type" => "LONGVARCHAR", "required" => "false", "size" => 1023],
     ];
 
     /**
