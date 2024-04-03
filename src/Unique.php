@@ -7,6 +7,7 @@ class Unique
 
     private $attributes = [];
     private $columns = [];
+    private $logger;
 
     public function __construct($logger)
     {

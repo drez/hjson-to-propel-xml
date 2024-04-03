@@ -16,6 +16,9 @@ class HjsonToPropelXml
     private $Database;
 
     public $logger;
+    public $Xml;
+
+    private static $level = 0;
 
     public function __construct($logger)
     {
@@ -33,9 +36,10 @@ class HjsonToPropelXml
         $parser = new HJSONParser();
 
         $obj = $parser->parse($hjson, ['assoc' => true]);
-        if($obj['%PROJECT_NAME%']){
+        if(isset($obj['%PROJECT_NAME%'])){
             return 1;
         }
+        self::$level = 0;
         return $this->convert($obj);
     }
 
@@ -47,14 +51,13 @@ class HjsonToPropelXml
      */
     public function convert(array $obj)
     {
-        static $level = 0;
         // foreach level
         try {
             foreach ($obj as $key => $el) {
-                if ($level == 0) {  // root level
+                if (self::$level == 0) {  // root level
                     $this->logger->info("convert start - found database '$key'");
                     $this->Database = new Database(['name' => $key], $this->logger);
-                    $level++;
+                    self::$level++;
                     if (is_array($el) && count($obj) == 1) {
                         if (!$this->convert($el)) {
                             $this->Xml = $this->Database->getXml();
@@ -68,12 +71,12 @@ class HjsonToPropelXml
                     }
                 } else {
                     $done = false;
-                    $done = $this->Database->add($key, $el, $level);
+                    $done = $this->Database->add($key, $el, self::$level);
 
                     if (is_array($el) && !$done) {
-                        $level++;
+                        self::$level++;
                         $this->convert($el);
-                        $level--;
+                        self::$level--;
                     }
                 }
             }

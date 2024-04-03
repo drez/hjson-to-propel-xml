@@ -64,7 +64,7 @@ class Xml
             "reference" => 3,
         ];
 
-        $count = ($keywords_padding[$name]) ? $keywords_padding[$name] : 0;
+        $count = (!empty($keywords_padding[$name])) ? $keywords_padding[$name] : 0;
 
         for ($i = 0; $i < $count; $i++) {
             $pad .= "\t";

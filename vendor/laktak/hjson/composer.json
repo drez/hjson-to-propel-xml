@@ -1,0 +1,40 @@
+{
+    "name": "laktak/hjson",
+    "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Issam Zoli",
+            "email": "jawbfl@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://github.com/hjson/hjson-php",
+    "keywords": [
+        "json",
+        "comments",
+        "config",
+        "hjson",
+        "parser",
+        "serializer",
+        "human"
+    ],
+    "require": {
+        "php": ">=5.6",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "HJSON\\": "src/HJSON"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "HJSON\\Tests\\": "tests/"
+        }
+    }
+}

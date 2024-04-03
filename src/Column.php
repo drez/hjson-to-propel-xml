@@ -135,6 +135,9 @@ class Column
      */
     private $isIndex = false;
 
+    private $logger;
+    private $key;
+
     public function __construct($key, $value, $logger)
     {
         $this->logger = $logger;
@@ -217,6 +220,8 @@ class Column
      */
     private function setOtherAttributes(array $values)
     {
+        $setForeign = null;
+
         $keywords = \array_keys($this->keywords);
         //print_r($keywords);
         foreach ($values as $value) {

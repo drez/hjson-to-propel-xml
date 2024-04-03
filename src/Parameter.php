@@ -6,6 +6,7 @@ class Parameter
 {
 
     private $attributes = [];
+    private $isArray;
 
     public function __construct($key, $value)
     {

@@ -1,0 +1,127 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "74032776b8f21200690b4aa82c2844a2",
+    "packages": [
+        {
+            "name": "laktak/hjson",
+            "version": "v2.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hjson/hjson-php.git",
+                "reference": "c0c76ebb3a30af1fd0ea6fa88796ca835b3d156e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hjson/hjson-php/zipball/c0c76ebb3a30af1fd0ea6fa88796ca835b3d156e",
+                "reference": "c0c76ebb3a30af1fd0ea6fa88796ca835b3d156e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HJSON\\": "src/HJSON"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Issam Zoli",
+                    "email": "jawbfl@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "JSON for Humans. A configuration file format with relaxed syntax, fewer mistakes and more comments.",
+            "homepage": "https://github.com/hjson/hjson-php",
+            "keywords": [
+                "comments",
+                "config",
+                "hjson",
+                "human",
+                "json",
+                "parser",
+                "serializer"
+            ],
+            "support": {
+                "issues": "https://github.com/hjson/hjson-php/issues",
+                "source": "https://github.com/hjson/hjson-php/tree/v2.2.2"
+            },
+            "time": "2023-10-23T19:26:38+00:00"
+        },
+        {
+            "name": "psr/log",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
+            "time": "2021-05-03T11:20:27+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.6",
+        "ext-mbstring": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}

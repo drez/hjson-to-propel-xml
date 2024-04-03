@@ -80,6 +80,7 @@ class Table
      * @var int
      */
     private $Index;
+    private $logger;
 
     public function __construct($key, $logger)
     {

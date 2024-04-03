@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'drez/hjson-to-propel-xml',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '461c4a2ee59769e2c50237634ef0f441b78c2496',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'drez/hjson-to-propel-xml' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '461c4a2ee59769e2c50237634ef0f441b78c2496',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'laktak/hjson' => array(
+            'pretty_version' => 'v2.2.2',
+            'version' => '2.2.2.0',
+            'reference' => 'c0c76ebb3a30af1fd0ea6fa88796ca835b3d156e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laktak/hjson',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'psr/log' => array(
+            'pretty_version' => '1.1.4',
+            'version' => '1.1.4.0',
+            'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/log',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

@@ -49,17 +49,59 @@ class Database
      * @var array
      */
     private $parameters = [
-        "set_debug_level", "set_parent_menu", "set_order_list_columns", "set_list_hide_columns",
-        "set_menu_priority", "set_parent_table", "set_form_title", "set_child_colunms",
-        "set_list_hide_columns_except", "set_input_options", "set_order_child_list_columns",
-        "set_top_nav","set_selectbox_filters",
-        "is_builder", "is_file_upload_table", "is_wysiwyg_colunms",  "is_root_columns", "is_file_upload",
-        "with_api", "with_child_tables", "with_country",
-        "add_hooks", "add_search_columns", "add_tab_columns", "add_child_search_columns", "add_menu",
-        "checkbox_all_child", "auth_session_val", "readonly_columns", "total_columns_child", "calculated_prefix", "multiple_fenetre", "bulk_update",
-        "child_select", "filter_select", "unit_caption", "total_columns", "common_filter", "order_select",
+        "set_debug_level",
+        "set_parent_menu",
+        "set_order_list_columns",
+        "set_list_hide_columns",
+        "set_menu_priority",
+        "set_parent_table",
+        "set_form_title",
+        "set_child_colunms",
+        "set_list_hide_columns_except",
+        "set_input_options",
+        "set_order_child_list_columns",
+        "set_top_nav",
+        "set_selectbox_filters",
 
-        "auth_session_val", "required_child", "max_child", "owner_visible", "admin_columns", "auth_passwd_column", "i18n_langs", "copy_link"
+        "is_builder",
+        "is_file_upload_table",
+        "is_wysiwyg_colunms",
+        "is_root_columns",
+        "is_file_upload",
+        "with_api",
+        "with_child_tables",
+        "with_country",
+        "add_hooks",
+        "add_search_columns",
+        "add_tab_columns",
+        "add_child_search_columns",
+        "add_menu",
+        "checkbox_all_child",
+        "auth_session_val",
+        "readonly_columns",
+        "total_columns_child",
+        "calculated_prefix",
+        "multiple_fenetre",
+        "bulk_update",
+        "child_select",
+        "filter_select",
+        "unit_caption",
+        "total_columns",
+        "common_filter",
+        "order_select",
+
+        "auth_session_val",
+        "required_child",
+        "max_child",
+        "owner_visible",
+        "admin_columns",
+        "auth_passwd_column",
+        "i18n_langs",
+        "copy_link",
+
+        "set_config",
+        "set_readonly_columns",
+        "add_child_bulk"
     ];
 
     /**
@@ -95,6 +137,8 @@ class Database
     private $currentObj;
 
     private $tableCount;
+    private $logger;
+    private $Tables;
 
     public function __construct(array $attributes, $logger)
     {
@@ -114,7 +158,7 @@ class Database
     public function getAttributes()
     {
         foreach ($this->defaults as $key => $value) {
-            if ($this->attributes[$key]) {
+            if (isset($this->attributes[$key])) {
                 $attributes[$key] = $this->attributes[$key];
             } else {
                 $attributes[$key] = $value;
