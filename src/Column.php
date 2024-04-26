@@ -154,7 +154,7 @@ class Column
      * parse the function style column shortcut ie. String(32)
      *
      * @param string $key
-     * @return void
+     * @return array
      */
     private function parseValue(string $key)
     {
@@ -223,12 +223,15 @@ class Column
         $setForeign = null;
 
         $keywords = \array_keys($this->keywords);
-        //print_r($keywords);
+        
         foreach ($values as $value) {
-            if (!\is_null($value)) {
+if (($this->attributes['name'] == 'type')) {
+}
+            if (!\is_null($value)) { 
                 // check for keywords
                 $index = (str_replace($keywords, '', $value) != $value);
-                if ($index) {
+                 
+                if ($index && !strstr($value, ":")) {
                     if ($value == 'unique') {
                         $this->setUnique();
                     } elseif ($value == 'index') {
@@ -236,13 +239,15 @@ class Column
                     } elseif (stristr($value, 'foreign')) {
                         $this->setType($value);
                     } else {
-                        $this->attributes[$this->keywords[$value][0]] = $this->keywords[$value][1];
+                        $this->attributes[$this->keywords[$value][0]] = str_replace("\'", "'", trim($this->keywords[$value][1], "'"));
                     }
                     // check for key value
                 } elseif (strstr($value, ":")) {
+                    
                     $part = explode(':', $value);
+                    
                     if (isset($this->keywords[$part[0]])) {
-                        $this->attributes[$this->keywords[$part[0]][0]] = $part[1];
+                        $this->attributes[$this->keywords[$part[0]][0]] = str_replace("\'", "'", trim($part[1], "'"));
                     } elseif (isset($this->foreignKeywords[$part[0]])) {
                         if (is_object($this->ForeignKeys)) {
                             $this->ForeignKeys->setAttribute($this->foreignKeywords[$part[0]], $part[0], $part[1]);
@@ -256,6 +261,7 @@ class Column
                         $this->logger->warning("Unknown key:pair parameter: " . $value . " in " . $this->key);
                     }
                 } else {
+                    
                     $this->logger->warning("Unknown parameter: " . $value . " in " . $this->key);
                 }
             }

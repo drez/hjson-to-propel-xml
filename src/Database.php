@@ -101,7 +101,9 @@ class Database
 
         "set_config",
         "set_readonly_columns",
-        "add_child_bulk"
+        "add_child_bulk",
+        "add_mass_action",
+        "add_total",
     ];
 
     /**
