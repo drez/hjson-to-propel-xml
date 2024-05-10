@@ -38,7 +38,7 @@ class Column
         "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false"],
         "date" => ["type" => "DATE", "required" => "false"],
         "decimal" => ["type" => "DECIMAL", "size" => 6, "scale" => 2, "required" => "false"],
-        "text" => ["type" => "LONGVARCHAR", "required" => "false"],
+        "text" => ["type" => "CLOB", "required" => "false"],
         "int" => ["type" => "INTEGER", "required" => "false", "size" => 11],
         "longvarchar" => ["type" => "LONGVARCHAR", "required" => "false", "size" => 1023],
     ];

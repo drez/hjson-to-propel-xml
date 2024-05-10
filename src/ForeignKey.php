@@ -25,7 +25,7 @@ class ForeignKey
     private function setAttributes($key, $value)
     {
         $this->attributes = $this->defaults;
-        $this->attributes['key']['foreignTable'] = $value;
+        $this->attributes['key']['foreignTable'] = str_replace("'", '', $value);
         $this->attributes['reference']['local'] = $key;
         $this->attributes['reference']['foreign'] = $key;
     }
