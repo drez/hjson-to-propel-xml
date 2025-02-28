@@ -16,7 +16,7 @@ class Column
      */
     private $defaults = [
         "name" => '',
-        "description" => ''
+        "description" => '',
     ];
 
     /**
@@ -33,7 +33,7 @@ class Column
      */
     private $defaultsTypes = [
         "primary" => ["type" => "INTEGER", "size" => 11, "required" => "true", "primaryKey" => "true", "autoIncrement" => "true"],
-        "foreign" => ["type" => "INTEGER", "size" => 11, "required" => "true",],
+        "foreign" => ["type" => "INTEGER", "size" => 11, "required" => "true"],
         "string" => ["type" => "VARCHAR", "size" => 50, "required" => "false"],
         "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false"],
         "date" => ["type" => "DATE", "required" => "false"],
@@ -86,7 +86,7 @@ class Column
         "auto-increment" => ["autoIncrement", "true"],
         "unique" => [],
         "index" => [],
-        "foreign(" => []
+        "foreign(" => [],
     ];
 
     /**
@@ -100,6 +100,7 @@ class Column
         "string" => "size",
         "char" => "size",
         "integer" => "size",
+        "bigint" => "size",
         "longvarchar" => "size",
         "text" => "size",
         "primary" => "size",
@@ -118,7 +119,7 @@ class Column
         "onDelete" => "key",
         "onUpdate" => "key",
         "local" => "reference",
-        "foreign" => "reference"
+        "foreign" => "reference",
     ];
 
     /**
@@ -185,7 +186,6 @@ class Column
             }
         }
 
-
         //echo $key . \PHP_EOL;
     }
 
@@ -223,14 +223,14 @@ class Column
         $setForeign = null;
 
         $keywords = \array_keys($this->keywords);
-        
+
         foreach ($values as $value) {
-if (($this->attributes['name'] == 'type')) {
-}
-            if (!\is_null($value)) { 
+            if (($this->attributes['name'] == 'type')) {
+            }
+            if (!\is_null($value)) {
                 // check for keywords
                 $index = (str_replace($keywords, '', $value) != $value);
-                 
+
                 if ($index && !strstr($value, ":")) {
                     if ($value == 'unique') {
                         $this->setUnique();
@@ -243,9 +243,9 @@ if (($this->attributes['name'] == 'type')) {
                     }
                     // check for key value
                 } elseif (strstr($value, ":")) {
-                    
+
                     $part = explode(':', $value);
-                    
+
                     if (isset($this->keywords[$part[0]])) {
                         $this->attributes[$this->keywords[$part[0]][0]] = str_replace("\'", "'", trim($part[1], "'"));
                     } elseif (isset($this->foreignKeywords[$part[0]])) {
@@ -261,7 +261,7 @@ if (($this->attributes['name'] == 'type')) {
                         $this->logger->warning("Unknown key:pair parameter: " . $value . " in " . $this->key);
                     }
                 } else {
-                    
+
                     $this->logger->warning("Unknown parameter: " . $value . " in " . $this->key);
                 }
             }

@@ -71,6 +71,9 @@ class Database
         "with_api",
         "with_child_tables",
         "with_country",
+        "with_multi_tenant",
+        "with_register",
+
         "add_hooks",
         "add_search_columns",
         "add_tab_columns",
@@ -104,7 +107,8 @@ class Database
         "add_child_bulk",
         "add_mass_action",
         "add_total",
-        "child_table_read_only"
+        "child_table_read_only",
+        "set_label_link",
     ];
 
     /**
