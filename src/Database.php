@@ -109,6 +109,7 @@ class Database
         "add_total",
         "child_table_read_only",
         "set_label_link",
+        "add_crossref_filter",
     ];
 
     /**

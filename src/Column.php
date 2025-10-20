@@ -201,14 +201,62 @@ class Column
             $this->logger->warning("A column (" . print_r($values, true) . ") is misconfigured in " . $this->key);
         } else {
             if (is_array($values)) {
-                $this->setType($values[0]);
-                //remove type from array and parse the other parameters
-                unset($values[0]);
-                $this->setOtherAttributes($values);
+                // Find the type definition (not a simple keyword)
+                $typeIndex = $this->findTypeIndex($values);
+
+                if ($typeIndex !== false) {
+                    $this->setType($values[$typeIndex]);
+                    //remove type from array and parse the other parameters
+                    unset($values[$typeIndex]);
+                    $this->setOtherAttributes($values);
+                } else {
+                    // No explicit type found, treat first element as type
+                    $this->setType($values[0]);
+                    unset($values[0]);
+                    $this->setOtherAttributes($values);
+                }
             } else {
                 $this->setType($values);
             }
         }
+    }
+
+    /**
+     * Find the index of the type definition in the values array
+     * Type definitions are either in the defaultsTypes or contain parentheses (like foreign(table))
+     * Simple keywords like "primary", "required", "unique" are not types
+     *
+     * @param array $values
+     * @return int|false
+     */
+    private function findTypeIndex(array $values)
+    {
+        $simpleKeywords = ["primary", "required", "not-required", "null", "not-null", "unique", "index", "auto-increment"];
+
+        foreach ($values as $index => $value) {
+            // Skip simple keywords
+            if (in_array($value, $simpleKeywords)) {
+                continue;
+            }
+
+            // Skip key:value pairs (like "onDelete:cascade")
+            if (strstr($value, ":")) {
+                continue;
+            }
+
+            // Check if it's a type with parentheses (like "foreign(table)" or "string(32)")
+            if (strstr($value, "(")) {
+                return $index;
+            }
+
+            // Check if it's a defined type
+            $valueLower = strtolower($value);
+            if (isset($this->defaultsTypes[$valueLower])) {
+                return $index;
+            }
+        }
+
+        return false;
     }
 
     /**
