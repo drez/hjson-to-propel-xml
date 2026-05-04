@@ -37,6 +37,7 @@ class Column
         "string" => ["type" => "VARCHAR", "size" => 50, "required" => "false"],
         "enum" => ["type" => "ENUM", "valueSet" => "Yes, No", "required" => "false"],
         "date" => ["type" => "DATE", "required" => "false"],
+        "time" => ["type" => "TIME", "required" => "false"],
         "decimal" => ["type" => "DECIMAL", "size" => 6, "scale" => 2, "required" => "false"],
         "text" => ["type" => "CLOB", "required" => "false"],
         "int" => ["type" => "INTEGER", "required" => "false", "size" => 11],
@@ -96,6 +97,7 @@ class Column
      */
     private $columnType = [
         "timestamp" => "none",
+        "time" => "none",
         "varchar" => "size",
         "string" => "size",
         "char" => "size",

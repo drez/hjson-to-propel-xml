@@ -16,9 +16,9 @@ class Xml
                 if ($key == '$inner') {
                     $innerXml = $value;
                 } elseif ($simple_quotes && $key != 'name') {
-                    $attribs .= "$key='" . $value . "' ";
+                    $attribs .= "$key='" . htmlspecialchars($value, ENT_XML1 | ENT_COMPAT) . "' ";
                 } else {
-                    $attribs .= "$key=\"$value\" ";
+                    $attribs .= "$key=\"" . htmlspecialchars($value, ENT_XML1 | ENT_COMPAT) . "\" ";
                 }
             }
         }

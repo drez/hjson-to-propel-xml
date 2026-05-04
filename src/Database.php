@@ -54,6 +54,7 @@ class Database
         "set_order_list_columns",
         "set_list_hide_columns",
         "set_menu_priority",
+        "set_menu_subtitle",
         "set_parent_table",
         "set_form_title",
         "set_child_colunms",

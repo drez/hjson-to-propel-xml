@@ -136,6 +136,8 @@ class Table
 
         $this->attributes['$inner'] .= $this->Unique->getXml();
 
+        $this->attributes['$inner'] .= $this->Index->getXml();
+
         foreach ($this->Validators as $Validator) {
             $this->attributes['$inner'] .= $Validator->getXml();
         }
@@ -173,7 +175,7 @@ class Table
             $this->Unique->addColumn($Column->getName());
         }
         if ($Column->isIndex()) {
-            $this->Indexe->addColumn($Column->getName());
+            $this->Index->addColumn($Column->getName());
         }
     }
 
