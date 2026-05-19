@@ -76,6 +76,7 @@ class Database
         "with_register",
 
         "add_hooks",
+        "add_field_groups",
         "add_search_columns",
         "add_tab_columns",
         "add_child_search_columns",
@@ -111,6 +112,8 @@ class Database
         "child_table_read_only",
         "set_label_link",
         "add_crossref_filter",
+        "set_pills",
+        "set_main_label",
     ];
 
     /**
