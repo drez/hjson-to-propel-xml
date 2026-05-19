@@ -114,6 +114,8 @@ class Database
         "add_crossref_filter",
         "set_pills",
         "set_main_label",
+        "set_field_groups",
+        "set_identity_actions",
     ];
 
     /**
