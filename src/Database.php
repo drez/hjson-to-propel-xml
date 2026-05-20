@@ -116,6 +116,7 @@ class Database
         "set_main_label",
         "set_field_groups",
         "set_identity_actions",
+        "set_menu_icon",
     ];
 
     /**
