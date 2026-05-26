@@ -121,6 +121,7 @@ class Database
         "set_autocomplete",
         "add_title_link",
         "is_drive_backed",
+        "format_phone_columns",
     ];
 
     /**
