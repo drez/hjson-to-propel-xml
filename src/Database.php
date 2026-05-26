@@ -118,6 +118,9 @@ class Database
         "set_identity_actions",
         "set_menu_icon",
         "set_menu",
+        "set_autocomplete",
+        "add_title_link",
+        "is_drive_backed",
     ];
 
     /**
@@ -216,6 +219,13 @@ class Database
                     $this->currentObj->addBehavior('GoatCheese');
                 }
                 $this->currentObj->getBehavior('GoatCheese')->addParameter($key, $value);
+
+                // is_drive_backed: tell Propel not to emit DDL for this table —
+                // it has no MySQL persistence. OM/Config still generate so the
+                // Form/Service emitters and class autoloading keep working.
+                if ($key === 'is_drive_backed' && $this->currentObj instanceof Table) {
+                    $this->currentObj->setAttibute('skipSql', 'true');
+                }
             } else {
                 $this->logger->error("No current obj");
             }

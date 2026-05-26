@@ -16,9 +16,12 @@ class Xml
                 if ($key == '$inner') {
                     $innerXml = $value;
                 } elseif ($simple_quotes && $key != 'name') {
-                    $attribs .= "$key='" . htmlspecialchars($value, ENT_XML1 | ENT_COMPAT) . "' ";
+                    // ENT_QUOTES escapes both ' and " so a JSON value containing
+                    // either kind of quote survives the single-quoted attribute
+                    // delimiter. ENT_COMPAT alone left ' unescaped → malformed XML.
+                    $attribs .= "$key='" . htmlspecialchars($value, ENT_XML1 | ENT_QUOTES) . "' ";
                 } else {
-                    $attribs .= "$key=\"" . htmlspecialchars($value, ENT_XML1 | ENT_COMPAT) . "\" ";
+                    $attribs .= "$key=\"" . htmlspecialchars($value, ENT_XML1 | ENT_QUOTES) . "\" ";
                 }
             }
         }
