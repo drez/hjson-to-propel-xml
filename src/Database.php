@@ -119,6 +119,7 @@ class Database
         "set_menu_icon",
         "set_menu",
         "set_autocomplete",
+        "set_quick_add",
         "add_title_link",
         "is_drive_backed",
         "format_phone_columns",
