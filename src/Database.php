@@ -124,6 +124,8 @@ class Database
         "is_drive_backed",
         "format_phone_columns",
         "format_date_columns",
+        "search_tabs",
+        "search_tabs_child",
     ];
 
     /**
