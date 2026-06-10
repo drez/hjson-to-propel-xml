@@ -74,6 +74,7 @@ class Database
         "with_country",
         "with_multi_tenant",
         "with_register",
+        "with_vector",
 
         "add_hooks",
         "add_search_columns",

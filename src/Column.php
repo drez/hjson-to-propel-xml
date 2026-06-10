@@ -44,6 +44,10 @@ class Column
         "longvarchar" => ["type" => "LONGVARCHAR", "required" => "false", "size" => 1023],
         "longtext" => ["type" => "CLOB", "required" => "false"],
         "blob" => ["type" => "BLOB", "required" => "false"],
+        // MariaDB VECTOR column: stored/handled as a binary string by Propel
+        // (type=BLOB), but emitted to DDL via sqlType which is synthesized from
+        // the dimension argument in setAttributeFromType() => VECTOR(<dim>).
+        "vector" => ["type" => "BLOB", "required" => "false"],
     ];
 
     /**
@@ -112,6 +116,9 @@ class Column
         "boolean" => "size",
         "enum" => "valueSet",
         "decimal" => ["size", "scale"],
+        // vector(<dim>): the dimension is captured as size; setAttributeFromType()
+        // additionally synthesizes sqlType = VECTOR(<dim>) for the DDL.
+        "vector" => "size",
     ];
 
     /**
@@ -425,6 +432,16 @@ class Column
             }
         } elseif (!is_array($this->defaultsTypes[$type])) {
             $this->logger->warning("Unknown type " . $type);
+        }
+
+        // MariaDB VECTOR: synthesize the dimensioned sqlType from the size arg.
+        // Propel keeps type=BLOB (binary string in PHP) but emits sqlType
+        // verbatim into the DDL => `VECTOR(<dim>)`.
+        if ($type === 'vector') {
+            $dimension = $this->attributes['size'] ?? '';
+            $this->attributes['sqlType'] = ($dimension !== '')
+                ? 'VECTOR(' . $dimension . ')'
+                : 'VECTOR';
         }
     }
 
