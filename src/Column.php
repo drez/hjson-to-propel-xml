@@ -42,6 +42,8 @@ class Column
         "text" => ["type" => "CLOB", "required" => "false"],
         "int" => ["type" => "INTEGER", "required" => "false", "size" => 11],
         "longvarchar" => ["type" => "LONGVARCHAR", "required" => "false", "size" => 1023],
+        "longtext" => ["type" => "CLOB", "required" => "false"],
+        "blob" => ["type" => "BLOB", "required" => "false"],
     ];
 
     /**
@@ -401,7 +403,8 @@ class Column
         if (!empty($this->columnType[$type])) {
 
             if ($this->columnType[$type] == 'size' && empty($value)) {
-                $value = 10;
+                // keep the size declared in defaultsTypes (e.g. longvarchar 1023)
+                $value = $this->attributes['size'] ?? 10;
             }
 
             if (empty($this->attributes['type'])) {
