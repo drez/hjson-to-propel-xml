@@ -242,6 +242,24 @@ class Database
                 if (isset($this->currentObj)) {
                     if (!in_array($key, $this->tableKeywords)) {
                         if (isset($this->currentObj)) {
+                            // Real columns have a scalar type ("string(32)")
+                            // or a sequential list of type/modifier strings
+                            // (["varchar(80)","required"]). A parameter-style
+                            // key that is NOT whitelisted ($this->parameters)
+                            // carries an associative/object value
+                            // (set_autocomplete:{...}, add_menu:{...}); such a
+                            // value can never be a column, so it would be
+                            // silently absorbed as a bogus column and never
+                            // reach the emitter. Warn (with the table name) so
+                            // a typo or missing whitelist entry is findable
+                            // from the build log.
+                            if (is_array($value) && $this->isAssoc($value)) {
+                                $tableName = method_exists($this->currentObj, 'getAttributes')
+                                    ? ($this->currentObj->getAttributes()['name'] ?? '?') : '?';
+                                $this->logger->error("HJSON converter: table-level key '" . $key
+                                    . "' in table '" . $tableName . "' has an object value but is not a whitelisted"
+                                    . " parameter or behavior — it will be dropped. Check the spelling or add it to Database::\$parameters.");
+                            }
                             $this->currentObj->addColumn(new Column($key, $value, $this->logger));
                         } else {
                             $this->logger->error("No current obj 3");
@@ -269,6 +287,15 @@ class Database
     private function addBehavior($key, $value = null)
     {
         $this->Behaviors[$key] = new Behavior($key, $value, $this->logger);
+    }
+
+    /** True when $arr has at least one non-sequential (string) key. */
+    private function isAssoc(array $arr): bool
+    {
+        if ($arr === []) {
+            return false;
+        }
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
     private function hasBehavior($key)
