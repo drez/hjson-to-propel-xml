@@ -111,6 +111,21 @@ class Database
         "child_table_read_only",
         "set_label_link",
         "add_crossref_filter",
+
+        // keep in sync with vendor/apigoat/goatcheese/Parameters/ and
+        // behavior-parameters.json — an unknown key here silently becomes
+        // a table (db level) or column (table level)
+        "set_menu",
+        "set_autocomplete",
+        "set_menu_icon",
+        "set_quick_add",
+        "add_title_link",
+        "format_date_columns",
+        "format_phone_columns",
+        "is_drive_backed",
+        "is_group_table",
+        "is_rights_column",
+        "parent_table",
     ];
 
     /**
@@ -199,6 +214,12 @@ class Database
                     }
                 } else {
                     $this->currentObj->getBehavior($behavior_name)->addParameter($this->behaviors_config[$key]['parameter'], $value);
+                }
+            } elseif (is_array($value) && array_keys($value) !== range(0, count($value) - 1)) {
+                # object form passes parameters straight through, e.g.
+                # add_tablestamp:{ exclude:"all" } → <parameter name="exclude" value="all"/>
+                foreach ($value as $pk => $pv) {
+                    $this->currentObj->getBehavior($behavior_name)->addParameter($pk, $pv);
                 }
             }
             return true;
