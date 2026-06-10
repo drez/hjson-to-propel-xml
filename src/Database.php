@@ -133,6 +133,7 @@ class Database
         "is_group_table",
         "is_rights_column",
         "parent_table",
+        "comment_columns",
     ];
 
     /**
