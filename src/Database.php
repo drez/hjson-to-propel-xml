@@ -134,6 +134,7 @@ class Database
         "is_rights_column",
         "parent_table",
         "comment_columns",
+        "set_comment_columns",
     ];
 
     /**
