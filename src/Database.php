@@ -126,6 +126,7 @@ class Database
         "set_quick_add",
         "add_title_link",
         "is_drive_backed",
+        "with_vector",
         "format_phone_columns",
         "format_date_columns",
         "search_tabs",

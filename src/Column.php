@@ -44,6 +44,9 @@ class Column
         "longvarchar" => ["type" => "LONGVARCHAR", "required" => "false", "size" => 1023],
         "longtext" => ["type" => "CLOB", "required" => "false"],
         "blob" => ["type" => "BLOB", "required" => "false"],
+        // MariaDB 11.7+ VECTOR(N): Propel has no native vector type, so the
+        // column rides as BLOB with sqlType=VECTOR(N) (see setAttributeFromType)
+        "vector" => ["type" => "BLOB", "required" => "false"],
     ];
 
     /**
@@ -112,6 +115,7 @@ class Column
         "boolean" => "size",
         "enum" => "valueSet",
         "decimal" => ["size", "scale"],
+        "vector" => "size",
     ];
 
     /**
@@ -422,6 +426,15 @@ class Column
                 }
             } elseif ($this->columnType[$type] != 'none') {
                 $this->attributes[$this->columnType[$type]] = $value;
+            }
+
+            // vector(N) → MariaDB native VECTOR(N); dimension count must be
+            // a positive int or the index/VEC_ functions reject the column
+            if ($type === 'vector') {
+                if ((int) $value <= 0) {
+                    $this->logger->warning("vector(N) requires a positive dimension count in " . $this->key);
+                }
+                $this->attributes['sqlType'] = 'VECTOR(' . (int) $value . ')';
             }
         } elseif (!is_array($this->defaultsTypes[$type])) {
             $this->logger->warning("Unknown type " . $type);
