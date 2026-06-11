@@ -124,6 +124,7 @@ class Database
         "set_menu",
         "set_autocomplete",
         "set_quick_add",
+        "set_refresh_on_child_change",
         "add_title_link",
         "is_drive_backed",
         "with_vector",
