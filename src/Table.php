@@ -134,6 +134,7 @@ class Table
             $this->attributes['$inner'] .= $Column->getXml();
         }
 
+        $this->Unique->checkColumns(array_keys($this->Columns), $this->attributes['name']);
         $this->attributes['$inner'] .= $this->Unique->getXml();
 
         $this->attributes['$inner'] .= $this->Index->getXml();
@@ -182,6 +183,30 @@ class Table
     public function is_cross_ref(bool $values)
     {
         $this->attributes['isCrossRef'] = "true";
+    }
+
+    /**
+     * table-level composite unique indexes:
+     *   unique: [["id_budget", "year", "month"], ...]
+     * each inner array becomes one multi-column <unique> block;
+     * single-column uniqueness stays on the column ("unique" flag)
+     *
+     * @param mixed $values
+     * @return void
+     */
+    public function unique($values)
+    {
+        if (!is_array($values)) {
+            $this->logger->error("unique: table-level 'unique' in table '" . $this->name . "' must be an array of arrays of column names, e.g. unique: [[\"col_a\", \"col_b\"]]");
+            return;
+        }
+        foreach ($values as $group) {
+            if (!is_array($group) || count($group) === 0 || $group !== array_filter($group, 'is_string')) {
+                $this->logger->error("unique: each group in table '" . $this->name . "' must be a non-empty array of column-name strings, e.g. unique: [[\"col_a\", \"col_b\"]] — group skipped");
+                continue;
+            }
+            $this->Unique->addComposite($group);
+        }
     }
 
     public function validator(array $values)

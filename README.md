@@ -41,7 +41,9 @@ Now you can write that:
             // default string column type=VARCHAR size=50
             validation_key:"string(32)",
             
-            // Unique markup will be added for the table
+            // A single-column unique index is added per column flagged "unique";
+            // for a composite (multi-column) unique index use the table-level key
+            // unique: [["col_a", "col_b"]] (one inner array per composite index)
             "username(Username)":["string(32)", "not-required", "unique"],
             
             // set the defaultValue=No

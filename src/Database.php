@@ -146,7 +146,9 @@ class Database
      */
     private $tableKeywords = [
         "is_cross_ref",
-        "validator"
+        "validator",
+        // composite unique indexes: unique: [["col_a", "col_b"], ...]
+        "unique"
     ];
 
     /**
