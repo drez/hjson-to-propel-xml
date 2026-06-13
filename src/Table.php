@@ -121,6 +121,22 @@ class Table
      */
     public function getAttributes()
     {
+        // Collect color columns and feed the emitter's color_picker_columns
+        // channel on the GoatCheese behavior (drives the gcColorField widget).
+        // Must run before the behavior XML is emitted below.
+        $colorColumns = [];
+        foreach ($this->Columns as $Column) {
+            if ($Column->isColor()) {
+                $colorColumns[] = $Column->getName();
+            }
+        }
+        if (!empty($colorColumns)) {
+            if (!$this->hasBehavior('GoatCheese')) {
+                $this->addBehavior('GoatCheese');
+            }
+            $this->getBehavior('GoatCheese')->addParameter('color_picker_columns', $colorColumns);
+        }
+
         foreach ($this->Behaviors as $Behavior) {
             $this->attributes['$inner'] .= $Behavior->getXml();
         }

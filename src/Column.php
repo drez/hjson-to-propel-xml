@@ -47,6 +47,9 @@ class Column
         // MariaDB 11.7+ VECTOR(N): Propel has no native vector type, so the
         // column rides as BLOB with sqlType=VECTOR(N) (see setAttributeFromType)
         "vector" => ["type" => "BLOB", "required" => "false"],
+        // color: a hex web color "#rrggbb" stored as VARCHAR(7); the emitter
+        // renders it as the gcColorField widget (swatch + native picker).
+        "color" => ["type" => "VARCHAR", "size" => 7, "required" => "false"],
     ];
 
     /**
@@ -116,6 +119,7 @@ class Column
         "enum" => "valueSet",
         "decimal" => ["size", "scale"],
         "vector" => "size",
+        "color" => "size",
     ];
 
     /**
@@ -143,6 +147,13 @@ class Column
      * @var boolean
      */
     private $isIndex = false;
+
+    /**
+     * is column a color field (HJSON type "color")
+     *
+     * @var boolean
+     */
+    private $isColor = false;
 
     private $logger;
     private $key;
@@ -363,6 +374,16 @@ class Column
         return $this->isIndex;
     }
 
+    private function setColor(): void
+    {
+        $this->isColor = true;
+    }
+
+    public function isColor(): bool
+    {
+        return $this->isColor;
+    }
+
     /**
      * parse the function style column shortcut ie. String(32)
      *
@@ -435,6 +456,12 @@ class Column
                     $this->logger->warning("vector(N) requires a positive dimension count in " . $this->key);
                 }
                 $this->attributes['sqlType'] = 'VECTOR(' . (int) $value . ')';
+            }
+
+            // color: flag the column so Table::getAttributes() can collect it
+            // into the GoatCheese behavior's color_picker_columns parameter.
+            if ($type === 'color') {
+                $this->setColor();
             }
         } elseif (!is_array($this->defaultsTypes[$type])) {
             $this->logger->warning("Unknown type " . $type);
