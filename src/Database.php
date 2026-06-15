@@ -88,6 +88,7 @@ class Database
         "calculated_prefix",
         "multiple_fenetre",
         "bulk_update",
+        "clone_entry",
         "child_select",
         "filter_select",
         "unit_caption",
