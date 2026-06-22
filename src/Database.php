@@ -96,7 +96,6 @@ class Database
         "common_filter",
         "order_select",
 
-        "auth_session_val",
         "required_child",
         "max_child",
         "owner_visible",
