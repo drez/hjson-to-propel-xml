@@ -463,8 +463,20 @@ class Column
             if ($type === 'color') {
                 $this->setColor();
             }
-        } elseif (!is_array($this->defaultsTypes[$type])) {
-            $this->logger->warning("Unknown type " . $type);
+        } elseif (!isset($this->defaultsTypes[$type]) || !is_array($this->defaultsTypes[$type])) {
+            // The token is neither a recognized column type (defaultsTypes /
+            // columnType) nor a whitelisted parameter/behavior (those are routed
+            // by Database::add before ever reaching Column). It is most likely a
+            // misspelled type, or a misrouted scalar/list-valued table-level key
+            // that "looks like a column" — emitted as a bogus column that never
+            // reaches the GoatCheese emitter. Name the column so it's findable
+            // from the build log. (isset guard avoids an undefined-array-key
+            // warning when $type is absent from defaultsTypes; a plain `else`
+            // here would wrongly fire for valid no-arg types like foreign/date.)
+            $this->logger->warning("HJSON converter: unknown column type '" . $type
+                . "' for column '" . ($this->attributes['name'] ?? $this->name ?? $this->key)
+                . "' — not a recognized type, and not a whitelisted parameter/behavior."
+                . " Check the spelling, or add it to Database::\$parameters if it is meant to be a behavior.");
         }
     }
 
