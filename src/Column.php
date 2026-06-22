@@ -410,6 +410,31 @@ class Column
     }
 
     /**
+     * Validate a numeric type argument (column size/scale). ctype_digit rejects
+     * signs, decimals and non-digits, so 'abc', '-5' and '1.5' all fail.
+     *
+     * @param mixed $v          the argument as parsed from the HJSON type token
+     * @param bool  $allowZero  true for scale (>= 0), false for size (> 0)
+     */
+    private function isIntArg($v, bool $allowZero): bool
+    {
+        $v = trim((string) $v);
+        if ($v === '' || !ctype_digit($v)) {
+            return false;
+        }
+        return $allowZero ? true : ((int) $v > 0);
+    }
+
+    /**
+     * Build a findable type-argument warning naming the offending column.
+     */
+    private function typeArgMsg(string $type, string $value, string $detail): string
+    {
+        return "HJSON converter: " . $type . "(" . $value . ") for column '"
+            . ($this->attributes['name'] ?? $this->name ?? $this->key) . "' — " . $detail . ".";
+    }
+
+    /**
      * set the attribute to set depending on the type keyword
      *
      * @param [type] $type
@@ -442,11 +467,28 @@ class Column
                 if (is_array($values) && count($values) == 2) {
                     $this->attributes[$this->columnType[$type][0]] = $values[0];
                     $this->attributes[$this->columnType[$type][1]] = $values[1];
+                    // size must be a positive int, scale a non-negative int.
+                    // decimal(x,y) would otherwise reach Propel as size="x" and
+                    // fail with an opaque DDL error far from the schema.
+                    if (!$this->isIntArg($values[0], false)) {
+                        $this->logger->warning($this->typeArgMsg($type, $value, 'the first argument (size) must be a positive integer'));
+                    }
+                    if (!$this->isIntArg($values[1], true)) {
+                        $this->logger->warning($this->typeArgMsg($type, $value, 'the second argument (scale) must be a non-negative integer'));
+                    }
                 } else {
                     $this->logger->warning("Problem with " . $this->attributes['name'] . " type " . $this->attributes['type'] . " requires 2 parameters");
                 }
             } elseif ($this->columnType[$type] != 'none') {
                 $this->attributes[$this->columnType[$type]] = $value;
+                // A 'size' argument must be a positive integer (string(32),
+                // int(11)); string(abc) / int(-5) would otherwise reach Propel
+                // as size="abc". vector(N) has its own positive-dimension check
+                // below, so skip it here to avoid a duplicate warning.
+                if ($this->columnType[$type] === 'size' && $type !== 'vector'
+                    && trim((string) $value) !== '' && !$this->isIntArg($value, false)) {
+                    $this->logger->warning($this->typeArgMsg($type, $value, 'the size argument must be a positive integer'));
+                }
             }
 
             // vector(N) → MariaDB native VECTOR(N); dimension count must be
