@@ -27,6 +27,9 @@ class Behavior
 
     public function getAttributes()
     {
+        // Sentinel content-accumulator key; init before .= to avoid an
+        // "Undefined array key" notice when the behavior has no parameters.
+        $this->attributes['$inner'] ??= '';
         foreach ($this->Parameters as $Parameters) {
             $this->attributes['$inner'] .= $Parameters->getXml();
         }

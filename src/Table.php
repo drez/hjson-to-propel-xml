@@ -137,6 +137,10 @@ class Table
             $this->getBehavior('GoatCheese')->addParameter('color_picker_columns', $colorColumns);
         }
 
+        // Initialize the '$inner' content accumulator before the first .= so a
+        // table with no behaviors/columns doesn't emit an "Undefined array key"
+        // notice (it's a deliberate sentinel key, not a real attribute).
+        $this->attributes['$inner'] ??= '';
         foreach ($this->Behaviors as $Behavior) {
             $this->attributes['$inner'] .= $Behavior->getXml();
         }

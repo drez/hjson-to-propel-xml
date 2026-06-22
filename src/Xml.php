@@ -26,6 +26,7 @@ class Xml
             }
         }
 
+        $closeit = "";
         if ($close && empty($innerXml)) {
             $closeit = "/";
         }
