@@ -177,6 +177,15 @@ class Database
     private $logger;
     private $Tables;
 
+    /**
+     * #36: count of dropped schema elements — table-level keys with an object
+     * value that are not a whitelisted parameter/behavior, so they never reach
+     * the emitter. The build reads this to gate (a silent drop = a missing
+     * feature shipping), turning what was a warn-and-continue into a hard error.
+     */
+    private $dropCount = 0;
+    private $dropMessages = [];
+
     public function __construct(array $attributes, $logger)
     {
         $this->behaviors = array_keys($this->behaviors_config);
@@ -278,6 +287,9 @@ class Database
                                 $this->logger->error("HJSON converter: table-level key '" . $key
                                     . "' in table '" . $tableName . "' has an object value but is not a whitelisted"
                                     . " parameter or behavior — it will be dropped. Check the spelling or add it to Database::\$parameters.");
+                                $this->dropCount++;
+                                $this->dropMessages[] = "table '" . $tableName . "': '" . $key
+                                    . "' (object value, not a whitelisted parameter/behavior)";
                             }
                             $this->currentObj->addColumn(new Column($key, $value, $this->logger));
                         } else {
@@ -356,5 +368,17 @@ class Database
     public function getTableCount()
     {
         return $this->tableCount;
+    }
+
+    /** #36: number of dropped (misrouted) table-level parameters in this database. */
+    public function getDropCount(): int
+    {
+        return $this->dropCount;
+    }
+
+    /** #36: human-readable descriptions of each dropped table-level parameter. */
+    public function getDropMessages(): array
+    {
+        return $this->dropMessages;
     }
 }

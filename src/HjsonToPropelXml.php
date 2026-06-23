@@ -30,6 +30,23 @@ class HjsonToPropelXml
         return $this->Xml;
     }
 
+    /**
+     * #36: how many table-level parameters this file dropped (object-valued keys
+     * that are not a whitelisted parameter/behavior, so they never reach the
+     * emitter). The build gates on this so a misrouted HJSON key fails loudly
+     * instead of silently shipping as a missing feature.
+     */
+    public function getDropCount(): int
+    {
+        return $this->Database ? $this->Database->getDropCount() : 0;
+    }
+
+    /** #36: descriptions of each dropped table-level parameter (empty when none). */
+    public function getDropMessages(): array
+    {
+        return $this->Database ? $this->Database->getDropMessages() : [];
+    }
+
     public function process(string $hjson)
     {
         $hjson = mb_ereg_replace('/\r/', "", $hjson); // make sure we have unix style text regardless of the input
