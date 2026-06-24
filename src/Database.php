@@ -125,6 +125,7 @@ class Database
         "set_autocomplete",
         "set_quick_add",
         "set_refresh_on_child_change",
+        "set_summary_cards",
         "add_title_link",
         "is_drive_backed",
         "with_vector",
