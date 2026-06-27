@@ -72,6 +72,7 @@ class Database
         "with_api",
         "with_child_tables",
         "with_country",
+        "with_refresh_tokens",
         "with_multi_tenant",
         "with_register",
 
