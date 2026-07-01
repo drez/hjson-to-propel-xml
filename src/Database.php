@@ -74,6 +74,7 @@ class Database
         "with_country",
         "with_refresh_tokens",
         "with_mcp",
+        "with_mobile",
         "with_multi_tenant",
         "with_register",
 
