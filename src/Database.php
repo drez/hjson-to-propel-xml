@@ -233,9 +233,11 @@ class Database
             if (isset($this->behaviors_config[$key]) && isset($this->behaviors_config[$key]['parameter'])) {
                 if (isset($this->behaviors_config[$key]['type'])) {
                     if ($this->behaviors_config[$key]['type'] == 'array') {
-                        foreach ($value as $val) {
-                            $this->currentObj->getBehavior($behavior_name)->addParameter($this->behaviors_config[$key]['parameter'], $val);
-                        }
+                        // Propel expects a single comma-separated value (e.g.
+                        // i18n_columns="subject_template,body_template"). Calling
+                        // addParameter() once per element overwrites, keeping only
+                        // the last column — so join instead.
+                        $this->currentObj->getBehavior($behavior_name)->addParameter($this->behaviors_config[$key]['parameter'], implode(',', $value));
                     }
                 } else {
                     $this->currentObj->getBehavior($behavior_name)->addParameter($this->behaviors_config[$key]['parameter'], $value);
