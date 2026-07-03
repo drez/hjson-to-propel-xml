@@ -141,6 +141,7 @@ class Database
         "parent_table",
         "comment_columns",
         "set_comment_columns",
+        "set_search_columns",
     ];
 
     /**
