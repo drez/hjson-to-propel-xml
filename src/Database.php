@@ -143,6 +143,7 @@ class Database
         "set_comment_columns",
         "set_search_columns",
         "set_date_cascade_delete",
+        "with_pdf",
     ];
 
     /**
