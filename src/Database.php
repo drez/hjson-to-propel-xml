@@ -144,6 +144,7 @@ class Database
         "set_search_columns",
         "set_date_cascade_delete",
         "with_pdf",
+        "with_legacy_hash",
     ];
 
     /**
