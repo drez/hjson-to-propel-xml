@@ -74,6 +74,8 @@ class Database
         "with_country",
         "with_refresh_tokens",
         "with_mcp",
+        "with_accounting_sync",
+        "sync_accounting",
         "with_mobile",
         "with_multi_tenant",
         "with_register",
