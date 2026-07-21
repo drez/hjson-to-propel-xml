@@ -79,6 +79,7 @@ class Database
         "with_mobile",
         "with_multi_tenant",
         "with_register",
+        "with_i18n",
 
         "add_hooks",
         "add_field_groups",
