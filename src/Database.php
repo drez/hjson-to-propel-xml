@@ -115,6 +115,7 @@ class Database
         "add_child_bulk",
         "add_mass_action",
         "add_prune_action",
+        "add_row_link",
         "add_total",
         "child_table_read_only",
         "set_label_link",
