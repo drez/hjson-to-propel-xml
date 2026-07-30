@@ -135,6 +135,16 @@ class Column
     ];
 
     /**
+     * attribute names set by an EXPLICIT column token (required, not-required,
+     * default:, null, ...). A type preset merged later in the token list —
+     * foreign(...) is applied mid-loop by setOtherAttributes() — must never
+     * clobber these, so token order in the HJSON column list doesn't matter.
+     *
+     * @var array<string,true>
+     */
+    private $explicit = [];
+
+    /**
      * is column unique
      *
      * @var boolean
@@ -307,6 +317,7 @@ class Column
                         $this->setType($value);
                     } else {
                         $this->attributes[$this->keywords[$value][0]] = str_replace("\'", "'", trim($this->keywords[$value][1], "'"));
+                        $this->explicit[$this->keywords[$value][0]] = true;
                     }
                     // check for key value
                 } elseif (strstr($value, ":")) {
@@ -315,6 +326,7 @@ class Column
 
                     if (isset($this->keywords[$part[0]])) {
                         $this->attributes[$this->keywords[$part[0]][0]] = str_replace("\'", "'", trim($part[1], "'"));
+                        $this->explicit[$this->keywords[$part[0]][0]] = true;
                     } elseif (isset($this->foreignKeywords[$part[0]])) {
                         if (is_object($this->ForeignKeys)) {
                             $this->ForeignKeys->setAttribute($this->foreignKeywords[$part[0]], $part[0], $part[1]);
@@ -446,7 +458,18 @@ class Column
         $type = \strtolower($type);
 
         if (isset($this->defaultsTypes[$type])) {
-            $this->attributes = array_merge($this->attributes, $this->defaultsTypes[$type]);
+            // Preset defaults must not clobber attributes set by an explicit
+            // token (e.g. "not-required" BEFORE "foreign(product)") — token
+            // order in the HJSON column list must not matter. Presets still
+            // override values set by earlier presets/types (integer() size 10
+            // → foreign preset size 11), preserving historical output.
+            $preset = $this->defaultsTypes[$type];
+            foreach (array_keys($preset) as $k) {
+                if (isset($this->explicit[$k])) {
+                    unset($preset[$k]);
+                }
+            }
+            $this->attributes = array_merge($this->attributes, $preset);
         }
 
         // Set the right attribute from the argument in type('argument')
