@@ -79,6 +79,7 @@ class Database
         "with_mobile",
         "with_multi_tenant",
         "with_register",
+        "with_authy_user",
         "with_i18n",
 
         "add_hooks",
