@@ -140,6 +140,7 @@ class Database
         "with_vector",
         "format_phone_columns",
         "format_date_columns",
+        "show_image_columns",
         "search_tabs",
         "search_tabs_child",
         "is_group_table",
