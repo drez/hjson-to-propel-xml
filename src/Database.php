@@ -77,6 +77,7 @@ class Database
         "with_accounting_sync",
         "sync_accounting",
         "with_mobile",
+        "with_client_telemetry",
         "with_multi_tenant",
         "with_register",
         "with_authy_user",
