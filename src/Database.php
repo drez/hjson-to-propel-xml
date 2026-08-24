@@ -155,6 +155,11 @@ class Database
         "with_pdf",
         "with_stripe",
         "with_legacy_hash",
+        // Routed here as well as handled below, because the emitter's Loader
+        // only instantiates a Parameter whose name is a KEY in the GoatCheese
+        // parameter bag. Listing is_cross_ref in $tableKeywords alone set the
+        // isCrossRef XML attribute but left Parameters/is_cross_ref.php dead.
+        "is_cross_ref",
     ];
 
     /**
@@ -278,6 +283,15 @@ class Database
                 // Form/Service emitters and class autoloading keep working.
                 if ($key === 'is_drive_backed' && $this->currentObj instanceof Table) {
                     $this->currentObj->setAttibute('skipSql', 'true');
+                }
+
+                // is_cross_ref: keep setting Propel's native isCrossRef
+                // attribute. Routing the key above means the $tableKeywords
+                // dispatch (Table::is_cross_ref) no longer runs for it, so do
+                // it here or the many-to-many marker would be lost.
+                if ($key === 'is_cross_ref' && $this->currentObj instanceof Table
+                    && !in_array($value, [false, 'false', 0, '0'], true)) {
+                    $this->currentObj->is_cross_ref(true);
                 }
             } else {
                 $this->logger->error("No current obj");
