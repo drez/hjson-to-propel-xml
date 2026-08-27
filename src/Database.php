@@ -114,6 +114,7 @@ class Database
 
         "set_config",
         "set_readonly_columns",
+        "set_trusted_html_columns",
         "add_child_bulk",
         "add_mass_action",
         "add_prune_action",
