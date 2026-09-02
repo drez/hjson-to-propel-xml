@@ -322,7 +322,9 @@ class Column
                     // check for key value
                 } elseif (strstr($value, ":")) {
 
-                    $part = explode(':', $value);
+                    // Limit 2: a default such as "default:hermes3:8b" or "default:00:00:00"
+                    // carries colons of its own; only the first one is the separator.
+                    $part = explode(':', $value, 2);
 
                     if (isset($this->keywords[$part[0]])) {
                         $this->attributes[$this->keywords[$part[0]][0]] = str_replace("\'", "'", trim($part[1], "'"));
