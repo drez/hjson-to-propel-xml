@@ -162,6 +162,7 @@ class Database
         "with_legacy_hash",
         "with_ai",
         "with_notify",
+        "set_list_threaded",
         // Routed here as well as handled below, because the emitter's Loader
         // only instantiates a Parameter whose name is a KEY in the GoatCheese
         // parameter bag. Listing is_cross_ref in $tableKeywords alone set the
