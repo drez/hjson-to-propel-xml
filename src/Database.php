@@ -155,6 +155,7 @@ class Database
         "comment_columns",
         "set_comment_columns",
         "set_search_columns",
+        "set_search_chips",
         "set_date_cascade_delete",
         "set_child_link",
         "with_pdf",
