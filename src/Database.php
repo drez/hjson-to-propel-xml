@@ -158,6 +158,7 @@ class Database
         "set_search_chips",
         "set_date_cascade_delete",
         "set_child_link",
+        "add_audit",
         "with_pdf",
         "with_stripe",
         "with_legacy_hash",
