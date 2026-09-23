@@ -161,6 +161,7 @@ class Database
         "add_audit",
         "with_pdf",
         "with_stripe",
+        "with_apple_iap",
         "with_legacy_hash",
         "with_ai",
         "with_notify",
