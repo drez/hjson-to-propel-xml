@@ -164,6 +164,7 @@ class Database
         "with_apple_iap",
         "with_legacy_hash",
         "with_ai",
+        "with_ops_monitor",
         "with_notify",
         "set_list_threaded",
         // Routed here as well as handled below, because the emitter's Loader
