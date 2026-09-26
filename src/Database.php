@@ -100,7 +100,6 @@ class Database
         "multiple_fenetre",
         "bulk_update",
         "clone_entry",
-        "child_select",
         "filter_select",
         "unit_caption",
         "total_columns",
@@ -219,6 +218,17 @@ class Database
      * the emitter. The build reads this to gate (a silent drop = a missing
      * feature shipping), turning what was a warn-and-continue into a hard error.
      */
+    /**
+     * Retired table-level keys => why / what replaces them. A retired key is
+     * refused like a misrouted one (counted as a drop, which fails `gc build`),
+     * but with a message that says what to do instead of "check the spelling".
+     */
+    private $retired = [
+        'child_select' => "retired 2026-09-26: the live selectbox cascade is automatic from set_selectbox_filters"
+            . " ([[\"<foreign col>\", \"%obj%.<host col>\"]] or the %<host col> shorthand) and the per-column"
+            . " opt-out was never used — delete the key",
+    ];
+
     private $dropCount = 0;
     private $dropMessages = [];
 
@@ -259,6 +269,14 @@ class Database
      */
     public function add(string $key, $value, int $level = 0)
     {
+        if (isset($this->retired[$key])) {
+            $tableName = (isset($this->currentObj) && method_exists($this->currentObj, 'getAttributes'))
+                ? ($this->currentObj->getAttributes()['name'] ?? '?') : '?';
+            $this->logger->error("HJSON converter: '" . $key . "' in table '" . $tableName . "' is " . $this->retired[$key] . ".");
+            $this->dropCount++;
+            $this->dropMessages[] = "table '" . $tableName . "': '" . $key . "' " . $this->retired[$key];
+            return true;
+        }
         if (in_array($key, $this->behaviors)) {
             // defined behaviors
             $behavior_name = (isset($this->behaviors_config[$key]['name'])) ? $this->behaviors_config[$key]['name'] : $key;
