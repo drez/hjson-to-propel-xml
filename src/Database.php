@@ -141,6 +141,7 @@ class Database
         "set_refresh_on_child_change",
         "set_summary_cards",
         "set_list_select_columns",
+        "set_headless",
         "add_title_link",
         "is_drive_backed",
         "with_vector",
