@@ -143,6 +143,7 @@ class Database
         "set_summary_cards",
         "set_list_select_columns",
         "set_headless",
+        "set_owner_column",
         "add_title_link",
         "is_drive_backed",
         "with_vector",
