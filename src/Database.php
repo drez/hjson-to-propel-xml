@@ -60,6 +60,8 @@ class Database
         "set_child_colunms",
         "set_list_hide_columns_except",
         "set_form_hide_columns",
+        "set_form_tabs",
+        "set_field_toggles",
         "set_input_options",
         "set_order_child_list_columns",
         "set_top_nav",
