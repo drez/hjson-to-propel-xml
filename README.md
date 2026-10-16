@@ -43,7 +43,11 @@ Now you can write that:
             
             // A single-column unique index is added per column flagged "unique";
             // for a composite (multi-column) unique index use the table-level key
-            // unique: [["col_a", "col_b"]] (one inner array per composite index)
+            // unique: [["col_a", "col_b"]] (one inner array per composite index).
+            // Columns flagged "index" all share ONE (non-unique) index; for a
+            // separate composite index use index: [["id_tenant", "created_at"]]
+            // (one inner array per index; members a behavior adds, e.g.
+            // date_creation, are accepted with a warning)
             "username(Username)":["string(32)", "not-required", "unique"],
             
             // set the defaultValue=No

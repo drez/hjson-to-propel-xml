@@ -188,7 +188,9 @@ class Database
         "is_cross_ref",
         "validator",
         // composite unique indexes: unique: [["col_a", "col_b"], ...]
-        "unique"
+        "unique",
+        // composite (non-unique) indexes: index: [["col_a", "col_b"], ...]
+        "index"
     ];
 
     /**

@@ -157,6 +157,7 @@ class Table
         $this->Unique->checkColumns(array_keys($this->Columns), $this->attributes['name']);
         $this->attributes['$inner'] .= $this->Unique->getXml();
 
+        $this->Index->checkColumns(array_keys($this->Columns), $this->attributes['name']);
         $this->attributes['$inner'] .= $this->Index->getXml();
 
         foreach ($this->Validators as $Validator) {
@@ -226,6 +227,30 @@ class Table
                 continue;
             }
             $this->Unique->addComposite($group);
+        }
+    }
+
+    /**
+     * table-level composite (non-unique) indexes:
+     *   index: [["id_tenant", "ingested_at"], ...]
+     * each inner array becomes one multi-column <index> block, independent of
+     * the columns flagged "index" (those still share one <index>)
+     *
+     * @param mixed $values
+     * @return void
+     */
+    public function index($values)
+    {
+        if (!is_array($values)) {
+            $this->logger->error("index: table-level 'index' in table '" . $this->name . "' must be an array of arrays of column names, e.g. index: [[\"col_a\", \"col_b\"]]");
+            return;
+        }
+        foreach ($values as $group) {
+            if (!is_array($group) || count($group) === 0 || $group !== array_filter($group, 'is_string')) {
+                $this->logger->error("index: each group in table '" . $this->name . "' must be a non-empty array of column-name strings, e.g. index: [[\"col_a\", \"col_b\"]] — group skipped");
+                continue;
+            }
+            $this->Index->addComposite($group);
         }
     }
 
