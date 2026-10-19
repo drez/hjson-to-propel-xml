@@ -83,6 +83,7 @@ class Database
         "with_job_queue",
         "with_mailbox",
         "with_mobile",
+        "with_home_screen",
         "with_client_telemetry",
         "with_multi_tenant",
         "with_register",
