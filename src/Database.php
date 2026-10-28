@@ -160,6 +160,7 @@ class Database
         "parent_table",
         "comment_columns",
         "set_comment_columns",
+        "set_json_display",
         "set_search_columns",
         "set_search_chips",
         "set_date_cascade_delete",
