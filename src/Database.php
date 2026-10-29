@@ -126,6 +126,7 @@ class Database
         "add_prune_action",
         "add_row_action",
         "add_row_link",
+        "add_count_columns",
         "add_total",
         "child_table_read_only",
         "set_label_link",
