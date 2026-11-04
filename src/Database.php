@@ -76,6 +76,7 @@ class Database
         "with_child_tables",
         "with_country",
         "with_refresh_tokens",
+        "with_menu_favorites",
         "with_mcp",
         "with_accounting_sync",
         "sync_accounting",
