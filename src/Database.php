@@ -131,6 +131,8 @@ class Database
         "add_count_columns",
         "add_total",
         "child_table_read_only",
+        "child_table_read_add_only",
+        "set_password_columns",
         "set_label_link",
         "add_crossref_filter",
 
