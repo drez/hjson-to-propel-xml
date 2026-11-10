@@ -39,5 +39,17 @@ if (strpos($msg, "'set_pasword_columns'") === false || strpos($msg, "table 'prod
 }
 echo "ok: a misspelled parameter is a drop; the correct one and prefixed columns are not\n";
 
+// A scalar at database level is a (misspelled) parameter, never a table: it used
+// to become a table that swallowed the database parameters written after it.
+$c = new HjsonToPropelXml(new NullLogger());
+$c->process('{ shop: { set_debug_levl: 3, with_api: true, product: { id: ["primary"], qty: ["int(4)"] } } }');
+if ($c->getDropCount() !== 1 || strpos(implode("\n", $c->getDropMessages()), "'set_debug_levl'") === false) {
+    $fail('a scalar database-level typo must be exactly one drop: ' . implode(' | ', $c->getDropMessages()));
+}
+$xml = (string) $c->getXml();
+if (strpos($xml, 'table name="set_debug_levl"') !== false) { $fail('the typo became a table'); }
+if (!preg_match('/<column name="qty"[^>]*size="4"/', $xml)) { $fail('int(4) must carry its size: ' . $xml); }
+echo "ok: database-level scalar typo is a drop; int(N) keeps its size\n";
+
 echo "\nALL ASSERTIONS PASSED\n";
 exit(0);

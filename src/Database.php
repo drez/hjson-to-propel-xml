@@ -399,6 +399,17 @@ class Database
                     $this->logger->error("No current obj 2");
                 }
             } elseif ($level < 2) {
+                // A table is always an object. A scalar here is a database-level
+                // parameter that is misspelled or not whitelisted: it used to
+                // become a TABLE named after the key, and every database
+                // parameter written after it was attached to that table.
+                if (!is_array($value)) {
+                    $this->logger->error("HJSON converter: database-level key '" . $key
+                        . "' has a scalar value and is not a whitelisted parameter — it is dropped. Check the spelling or add it to Database::\$parameters.");
+                    $this->dropCount++;
+                    $this->dropMessages[] = "database: '" . $key . "' (scalar value, not a whitelisted parameter)";
+                    return true;
+                }
                 // table
                 if (!isset($this->Tables[$key])) {
                     $this->Tables[$key] = new Table($key, $this->logger);

@@ -110,6 +110,7 @@ class Column
         "string" => "size",
         "char" => "size",
         "integer" => "size",
+        "int" => "size",
         "bigint" => "size",
         "longvarchar" => "size",
         "text" => "size",
