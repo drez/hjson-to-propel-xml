@@ -86,6 +86,7 @@ class Database
         "with_mobile",
         "with_home_screen",
         "with_client_telemetry",
+        "with_api_keys",
         "with_multi_tenant",
         "with_register",
         "with_authy_user",
