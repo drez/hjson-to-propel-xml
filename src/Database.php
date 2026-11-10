@@ -369,6 +369,22 @@ class Database
                                 $this->dropCount++;
                                 $this->dropMessages[] = "table '" . $tableName . "': '" . $key
                                     . "' (object value, not a whitelisted parameter/behavior)";
+                            } elseif (self::looksLikeParameter((string) $key, $value)) {
+                                // A scalar / list value looks exactly like a column,
+                                // so an unwhitelisted or misspelled parameter
+                                // (`set_pasword_columns: ["pin"]`) used to become a
+                                // bogus typeless COLUMN and never reach the emitter.
+                                // A key with a behavior prefix and no column type in
+                                // its value is a parameter, not a column: gate the
+                                // build like the object-valued case above.
+                                $tableName = method_exists($this->currentObj, 'getAttributes')
+                                    ? ($this->currentObj->getAttributes()['name'] ?? '?') : '?';
+                                $this->logger->error("HJSON converter: table-level key '" . $key
+                                    . "' in table '" . $tableName . "' looks like a parameter but is not whitelisted"
+                                    . " and carries no column type — it will be dropped. Check the spelling or add it to Database::\$parameters.");
+                                $this->dropCount++;
+                                $this->dropMessages[] = "table '" . $tableName . "': '" . $key
+                                    . "' (parameter-style name, no column type, not a whitelisted parameter/behavior)";
                             }
                             $this->currentObj->addColumn(new Column($key, $value, $this->logger));
                         } else {
@@ -456,6 +472,39 @@ class Database
     }
 
     /** #36: human-readable descriptions of each dropped table-level parameter. */
+    /** Prefixes every GoatCheese parameter / behavior key starts with. */
+    private const PARAMETER_PREFIXES = '/^(set|add|with|is|format|child|search|show)_[a-z0-9_]+$/';
+
+    /** Words that make a value a column definition (see Column::\$defaultsTypes / \$columnType). */
+    private const COLUMN_TYPE_WORDS = [
+        'primary', 'foreign', 'string', 'enum', 'date', 'time', 'timestamp', 'decimal', 'text', 'int', 'integer',
+        'bigint', 'varchar', 'char', 'longvarchar', 'longtext', 'blob', 'vector', 'color', 'bool', 'boolean',
+    ];
+
+    /**
+     * Is this unrouted table-level key a (misspelled / unwhitelisted) PARAMETER
+     * rather than a column? True when its name carries a behavior prefix and
+     * its value holds no column type: `is_active: ["boolean()"]` is a column,
+     * `set_pasword_columns: ["pin"]` or `with_foo: true` is not. Pure.
+     */
+    public static function looksLikeParameter(string $key, $value): bool
+    {
+        $name = strtolower(trim(explode('(', $key, 2)[0]));
+        if (!preg_match(self::PARAMETER_PREFIXES, $name)) {
+            return false;
+        }
+        foreach (is_array($value) ? $value : [$value] as $token) {
+            if (!is_string($token)) {
+                continue;
+            }
+            $token = strtolower(trim($token));
+            if (strpos($token, '(') !== false || in_array($token, self::COLUMN_TYPE_WORDS, true)) {
+                return false; // typed: a real column whose name happens to carry the prefix
+            }
+        }
+        return true;
+    }
+
     public function getDropMessages(): array
     {
         return $this->dropMessages;
