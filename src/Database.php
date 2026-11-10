@@ -64,7 +64,6 @@ class Database
         "set_field_toggles",
         "set_input_options",
         "set_order_child_list_columns",
-        "set_top_nav",
         "set_selectbox_filters",
 
         "is_builder",
@@ -112,9 +111,6 @@ class Database
         "common_filter",
         "order_select",
 
-        "required_child",
-        "max_child",
-        "owner_visible",
         "admin_columns",
         "auth_passwd_column",
         "i18n_langs",
@@ -241,6 +237,11 @@ class Database
         'child_select' => "retired 2026-09-26: the live selectbox cascade is automatic from set_selectbox_filters"
             . " ([[\"<foreign col>\", \"%obj%.<host col>\"]] or the %<host col> shorthand) and the per-column"
             . " opt-out was never used — delete the key",
+        'set_top_nav' => "retired 2026-11-10: the top-nav bar it was meant to configure was never wired — delete the key",
+        'owner_visible' => "retired 2026-11-10: the legacy My-Account form it fed was never reachable"
+            . " (self-service is the /Account screen) — delete the key",
+        'max_child' => "retired 2026-11-10: it never had any effect — delete the key",
+        'required_child' => "retired 2026-11-10: it never had any effect — delete the key",
     ];
 
     private $dropCount = 0;
