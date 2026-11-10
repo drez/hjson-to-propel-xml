@@ -51,5 +51,15 @@ if (strpos($xml, 'table name="set_debug_levl"') !== false) { $fail('the typo bec
 if (!preg_match('/<column name="qty"[^>]*size="4"/', $xml)) { $fail('int(4) must carry its size: ' . $xml); }
 echo "ok: database-level scalar typo is a drop; int(N) keeps its size\n";
 
+// A behavior shortcut written `false` is OFF (the value used to be ignored and
+// the behavior added anyway); `true` and the object form still add it.
+foreach (['false' => 0, '"no"' => 0, '0' => 0, 'true' => 1, '{ exclude: "all" }' => 1] as $val => $expected) {
+    $c = new HjsonToPropelXml(new NullLogger());
+    $c->process('{ shop: { product: { id: ["primary"], add_tablestamp: ' . $val . ' } } }');
+    $n = substr_count((string) $c->getXml(), 'behavior name="add_tablestamp"');
+    if ($n !== $expected) { $fail("add_tablestamp: $val should give $expected behavior(s), got $n"); }
+}
+echo "ok: a false behavior shortcut is off\n";
+
 echo "\nALL ASSERTIONS PASSED\n";
 exit(0);

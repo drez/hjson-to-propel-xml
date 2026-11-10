@@ -292,6 +292,11 @@ class Database
             return true;
         }
         if (in_array($key, $this->behaviors)) {
+            // `add_archivable: false` means OFF: the value used to be ignored and
+            // the behavior was added anyway — the opposite of what was written.
+            if ($value === false || $value === 0 || (is_string($value) && in_array(strtolower(trim($value)), ['false', '0', 'no', 'off'], true))) {
+                return true;
+            }
             // defined behaviors
             $behavior_name = (isset($this->behaviors_config[$key]['name'])) ? $this->behaviors_config[$key]['name'] : $key;
             $this->currentObj->addBehavior($behavior_name, $value);
