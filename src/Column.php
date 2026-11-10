@@ -269,8 +269,12 @@ class Column
                 continue;
             }
 
-            // Skip key:value pairs (like "onDelete:cascade")
-            if (strstr($value, ":")) {
+            // Skip key:value pairs (like "onDelete:cascade") — but a type whose
+            // ARGUMENT carries a colon is still a type: enum(09:00, 10:00) used
+            // to be skipped here and the column came out with no type at all.
+            $colon = strpos((string) $value, ':');
+            $paren = strpos((string) $value, '(');
+            if ($colon !== false && ($paren === false || $colon < $paren)) {
                 continue;
             }
 
@@ -316,9 +320,14 @@ class Column
                         $this->setIndex();
                     } elseif (stristr($value, 'foreign')) {
                         $this->setType($value);
-                    } else {
+                    } elseif (isset($this->keywords[$value][1])) {
                         $this->attributes[$this->keywords[$value][0]] = str_replace("\'", "'", trim($this->keywords[$value][1], "'"));
                         $this->explicit[$this->keywords[$value][0]] = true;
+                    } else {
+                        // Detection above is a substring test: "indexed" contains
+                        // "index" but is no keyword (it used to raise PHP warnings
+                        // and be dropped without a word).
+                        $this->logger->warning("Unknown parameter: " . $value . " in " . $this->key);
                     }
                     // check for key value
                 } elseif (strstr($value, ":")) {
@@ -337,8 +346,12 @@ class Column
                             // postpone the foreign parameters after creation
                             $setForeign[] = [$part[0], $part[1]];
                         }
-                    } elseif (in_array($value[0], $this->parameters)) {
-                        $this->attributes[$value[0]] = $value[1];
+                    } elseif (in_array($part[0], array_merge(...array_map('array_keys', $this->parameters)), true)) {
+                        // A Propel attribute written as attribute:value. The old
+                        // test compared the token's first CHARACTER against an
+                        // array of arrays, so this branch could never match.
+                        $this->attributes[$part[0]] = str_replace("\'", "'", trim($part[1], "'"));
+                        $this->explicit[$part[0]] = true;
                     } else {
                         $this->logger->warning("Unknown key:pair parameter: " . $value . " in " . $this->key);
                     }
@@ -484,7 +497,8 @@ class Column
             }
 
             if (empty($this->attributes['type'])) {
-                $this->attributes['type'] = strtoupper($type);
+                // `bool` is an alias: BOOL is not a Propel type, BOOLEAN is.
+                $this->attributes['type'] = $type === 'bool' ? 'BOOLEAN' : strtoupper($type);
             }
 
             // Set the attribute(s)
@@ -505,6 +519,9 @@ class Column
                 } else {
                     $this->logger->warning("Problem with " . $this->attributes['name'] . " type " . $this->attributes['type'] . " requires 2 parameters");
                 }
+            } elseif ($this->columnType[$type] === 'valueSet' && trim((string) $value) === '') {
+                // A bare `enum` keeps the preset valueSet ("Yes, No"): it used to
+                // be overwritten with an empty one.
             } elseif ($this->columnType[$type] != 'none') {
                 $this->attributes[$this->columnType[$type]] = $value;
                 // A 'size' argument must be a positive integer (string(32),
